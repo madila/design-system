@@ -1,0 +1,28 @@
+/**
+ * The following styles get applied inside the editor only.
+ *
+ * Replace them with your own styles or remove the file completely.
+ */
+
+.wp-block-design-system-frame {
+
+  &__inner-container {
+
+    padding-bottom: 0 !important;
+
+    > .wp-block {
+
+      position: unset !important;
+      left: unset !important;
+      max-width: var(--inner-group-max-width);
+      transition: all 300ms linear;
+      opacity: unset !important;
+
+    }
+
+  }
+
+  &__navigation {
+    display: none;
+  }
+}

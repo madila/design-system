@@ -1,0 +1,109 @@
+/**
+ * The following styles get applied both on the front of your site
+ * and in the editor.
+ *
+ * Replace them with your own styles or remove the file completely.
+ */
+
+.wp-block-design-system-frame {
+	--inner-group-max-width: 100%;
+	--child-count: 1;
+	--i: 0;
+	display: grid;
+	position: relative;
+	max-width: 100%;
+	overflow: hidden;
+
+	&__inner-container {
+		border: 0;
+		width: calc(100% * var(--n));
+		display: grid;
+		grid-gap: 0;
+		grid-auto-flow: column;
+		grid-auto-columns: 100%;
+		height: auto;
+		transition: all 200ms linear;
+		padding-bottom: 3rem;
+		scroll-snap-align: center;
+		transform: translate(calc(var(--i, 0)/var(--n)*-100%));
+
+		&:focus {
+			outline: none;
+		}
+
+		&.smooth {
+			transition: none;
+		}
+
+		&:not(.ready) {
+			> .wp-block-group, > .wp-block-image {
+				display: none;
+				&:first-child {
+					display: block;
+				}
+			}
+		}
+
+		> .wp-block-group, > .wp-block-image {
+
+			position: relative;
+			width: var(--inner-group-max-width);
+			margin-block-start: 0;
+			transition: all 300ms linear;
+			-webkit-user-drag: none;
+			pointer-events: none;
+			overflow: hidden;
+
+		}
+	}
+}
+
+
+.wp-block-design-system-frame {
+	position: relative;
+	overflow-x: visible;
+}
+
+.wp-block-design-system-frame > .wp-block-design-system-frame__inner-container:has(.wp-block-group:nth-child(2))  {
+	overflow-x: visible;
+	scroll-margin-top: 10rem;
+	counter-reset: item;
+	scroll-behavior: smooth;
+	scroll-snap-type: x mandatory;
+}
+
+.wp-block-cover:has(.wp-block-design-system-frame) {
+	scroll-snap-align: center;
+	scroll-margin-top: 10rem;
+}
+
+
+.wp-block-design-system-frame__navigation {
+	position: absolute;
+	bottom: 1rem;
+	display: flex;
+	width: 100%;
+	margin: 0;
+	justify-content: center;
+	gap: var(--wp--preset--spacing--40);
+
+	li {
+		list-style-type: none;
+	}
+}
+
+
+.wp-block-design-system-frame__navigation__dot {
+	display: block;
+	width: 1rem;
+	height: 1rem;
+	background-color: var(--wp--preset--color--contrast);
+	border-radius: 50%;
+	overflow: hidden;
+	text-indent: -30px;
+	opacity: 0.5;
+}
+
+.wp-block-design-system-frame__navigation__dot.active {
+	opacity: 1;
+}
