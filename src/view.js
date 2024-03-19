@@ -9,6 +9,7 @@ import {TFN} from "./helpers/timing-functions";
 const {state, callbacks, actions} = store( 'design-system-frame', {
     state: {
         locked: false,
+        scrolled: false,
         w: null,
         x0: null,
         N: 0,
@@ -27,6 +28,7 @@ const {state, callbacks, actions} = store( 'design-system-frame', {
             state.x0 = actions.unify(e).clientX;
             state.locked = true;
             ref.classList.add('smooth');
+
         },
         unify: (e) => { return e.changedTouches ? e.changedTouches[0] : e },
         animate: () => {

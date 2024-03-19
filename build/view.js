@@ -1,1 +1,270 @@
-import*as e from"@wordpress/interactivity";var t={d:(e,n)=>{for(var i in n)t.o(n,i)&&!t.o(e,i)&&Object.defineProperty(e,i,{enumerable:!0,get:n[i]})},o:(e,t)=>Object.prototype.hasOwnProperty.call(e,t)};const n=(s={getContext:()=>e.getContext,getElement:()=>e.getElement,store:()=>e.store},a={},t.d(a,s),a),i=function(e,t=1.675){return 1-Math.pow(1-e,t)},{state:o,callbacks:l,actions:r}=(0,n.store)("design-system-frame",{state:{locked:!1,w:null,x0:null,N:0,ini:null,fin:0,i:0,rID:null,anf:null,NF:30,cf:0},actions:{lock:e=>{const{ref:t}=(0,n.getElement)();o.x0=r.unify(e).clientX,o.locked=!0,t.classList.add("smooth")},unify:e=>e.changedTouches?e.changedTouches[0]:e,animate:()=>{const{ref:e}=(0,n.getElement)();Number.isNaN(i(o.cf/o.anf))||(e.style.setProperty("--i",o.ini+(o.fin-o.ini)*i(o.cf/o.anf)),o.cf===o.anf&&r.stopAnimation())},stopAnimation:()=>{cancelAnimationFrame(o.rID),o.rID=null},drag:e=>{if(e.preventDefault(),!o.locked)return;const{ref:t}=(0,n.getElement)(),i=r.unify(e).clientX;t.style.setProperty("--tx",`${Math.round(i-o.x0)}px`);let l=+((i-o.x0)/o.w).toFixed(2);t.style.setProperty("--i",o.i-l)},move:e=>{if(!o.locked)return;let t=r.unify(e).clientX-o.x0,i=Math.sign(t),l=+(i*t/o.w).toFixed(2);o.ini=o.i-i*l,(o.i>0||i<0)&&(o.i<o.N-1||i>0)&&l>.2&&(o.i-=i,l=1-l);const{ref:s}=(0,n.getElement)();o.fin=o.i,o.anf=Math.round(l*o.NF),o.i=Math.round(o.fin.toFixed()),o.x0=null;const a=new CustomEvent("frame-change-step",{detail:{scroll:!1,getIndex:()=>o.fin},bubbles:!0});s.dispatchEvent(a),s.classList.remove("smooth"),o.locked=!1},keydown:e=>{const{keyCode:t}=e;let n;switch(t){case 37:e.preventDefault(),n=o.i-1<0?0:o.i-1,o.locked=!0;break;case 39:e.preventDefault(),n=o.i+1>=o.N?o.i:o.i+1,o.locked=!0;break;default:return n=o.i,o.locked=!0,!1}o.i=n,o.fin=o.i,o.locked=!1},go:e=>{const{ref:t}=(0,n.getElement)();(0,n.getContext)().dot.selected=!0,o.i=parseInt(t.dataset.index),o.fin=o.i.toFixed()},init:()=>{const{ref:e}=(0,n.getElement)(),t=(0,n.getContext)();l.size(),o.N=e.children.length,e.style.setProperty("--n",o.N.toString()),t.ready=!0}},callbacks:{size:()=>{o.w=window.innerWidth},resetSelected:()=>{(0,n.getContext)("design-system-frame").list.forEach((e=>e.selected=e.index===o.i))}}});var s,a;
+import * as __WEBPACK_EXTERNAL_MODULE__wordpress_interactivity_8e89b257__ from "@wordpress/interactivity";
+/******/ var __webpack_modules__ = ({
+
+/***/ "./src/helpers/timing-functions.js":
+/*!*****************************************!*\
+  !*** ./src/helpers/timing-functions.js ***!
+  \*****************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   TFN: () => (/* binding */ TFN)
+/* harmony export */ });
+const TFN = {
+  'linear': function (k) {
+    return k;
+  },
+  'ease-in': function (k, e = 1.675) {
+    return Math.pow(k, e);
+  },
+  'ease-out': function (k, e = 1.675) {
+    return 1 - Math.pow(1 - k, e);
+  },
+  'ease-in-out': function (k) {
+    return .5 * (Math.sin((k - .5) * Math.PI) + 1);
+  },
+  'bounce-out': function (k, n = 3, a = 2.75, b = 1.5) {
+    return 1 - Math.pow(1 - k, a) * Math.abs(Math.cos(Math.pow(k, b) * (n + .5) * Math.PI));
+  }
+};
+
+/***/ }),
+
+/***/ "@wordpress/interactivity":
+/*!*******************************************!*\
+  !*** external "@wordpress/interactivity" ***!
+  \*******************************************/
+/***/ ((module) => {
+
+var x = (y) => {
+	var x = {}; __webpack_require__.d(x, y); return x
+} 
+var y = (x) => (() => (x))
+module.exports = __WEBPACK_EXTERNAL_MODULE__wordpress_interactivity_8e89b257__;
+
+/***/ })
+
+/******/ });
+/************************************************************************/
+/******/ // The module cache
+/******/ var __webpack_module_cache__ = {};
+/******/ 
+/******/ // The require function
+/******/ function __webpack_require__(moduleId) {
+/******/ 	// Check if module is in cache
+/******/ 	var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 	if (cachedModule !== undefined) {
+/******/ 		return cachedModule.exports;
+/******/ 	}
+/******/ 	// Create a new module (and put it into the cache)
+/******/ 	var module = __webpack_module_cache__[moduleId] = {
+/******/ 		// no module.id needed
+/******/ 		// no module.loaded needed
+/******/ 		exports: {}
+/******/ 	};
+/******/ 
+/******/ 	// Execute the module function
+/******/ 	__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 
+/******/ 	// Return the exports of the module
+/******/ 	return module.exports;
+/******/ }
+/******/ 
+/************************************************************************/
+/******/ /* webpack/runtime/define property getters */
+/******/ (() => {
+/******/ 	// define getter functions for harmony exports
+/******/ 	__webpack_require__.d = (exports, definition) => {
+/******/ 		for(var key in definition) {
+/******/ 			if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 				Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 			}
+/******/ 		}
+/******/ 	};
+/******/ })();
+/******/ 
+/******/ /* webpack/runtime/hasOwnProperty shorthand */
+/******/ (() => {
+/******/ 	__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
+/******/ })();
+/******/ 
+/******/ /* webpack/runtime/make namespace object */
+/******/ (() => {
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = (exports) => {
+/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 		}
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/ })();
+/******/ 
+/************************************************************************/
+var __webpack_exports__ = {};
+// This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
+(() => {
+/*!*********************!*\
+  !*** ./src/view.js ***!
+  \*********************/
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _wordpress_interactivity__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/interactivity */ "@wordpress/interactivity");
+/* harmony import */ var _helpers_timing_functions__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./helpers/timing-functions */ "./src/helpers/timing-functions.js");
+/**
+ * WordPress dependencies
+ *
+ *
+ */
+
+
+const {
+  state,
+  callbacks,
+  actions
+} = (0,_wordpress_interactivity__WEBPACK_IMPORTED_MODULE_0__.store)('design-system-frame', {
+  state: {
+    locked: false,
+    scrolled: false,
+    w: null,
+    x0: null,
+    N: 0,
+    ini: null,
+    fin: 0,
+    i: 0,
+    rID: null,
+    anf: null,
+    NF: 30,
+    cf: 0
+  },
+  actions: {
+    lock: e => {
+      const {
+        ref
+      } = (0,_wordpress_interactivity__WEBPACK_IMPORTED_MODULE_0__.getElement)();
+      state.x0 = actions.unify(e).clientX;
+      state.locked = true;
+      ref.classList.add('smooth');
+    },
+    unify: e => {
+      return e.changedTouches ? e.changedTouches[0] : e;
+    },
+    animate: () => {
+      const {
+        ref
+      } = (0,_wordpress_interactivity__WEBPACK_IMPORTED_MODULE_0__.getElement)();
+      if (Number.isNaN(_helpers_timing_functions__WEBPACK_IMPORTED_MODULE_1__.TFN['ease-out'](state.cf / state.anf))) return;
+      ref.style.setProperty('--i', state.ini + (state.fin - state.ini) * _helpers_timing_functions__WEBPACK_IMPORTED_MODULE_1__.TFN['ease-out'](state.cf / state.anf));
+      if (state.cf === state.anf) {
+        actions.stopAnimation();
+      }
+    },
+    stopAnimation: () => {
+      cancelAnimationFrame(state.rID);
+      state.rID = null;
+    },
+    drag: e => {
+      e.preventDefault();
+      if (!state.locked) return;
+      const {
+        ref
+      } = (0,_wordpress_interactivity__WEBPACK_IMPORTED_MODULE_0__.getElement)();
+      const unifiedX = actions.unify(e).clientX;
+      ref.style.setProperty('--tx', `${Math.round(unifiedX - state.x0)}px`);
+      let dx = unifiedX - state.x0,
+        f = +(dx / state.w).toFixed(2);
+      ref.style.setProperty('--i', state.i - f);
+    },
+    move: e => {
+      if (!state.locked) return;
+      let dx = actions.unify(e).clientX - state.x0,
+        s = Math.sign(dx),
+        f = +(s * dx / state.w).toFixed(2);
+      state.ini = state.i - s * f;
+      if ((state.i > 0 || s < 0) && (state.i < state.N - 1 || s > 0) && f > .2) {
+        state.i -= s;
+        f = 1 - f;
+      }
+      const {
+        ref
+      } = (0,_wordpress_interactivity__WEBPACK_IMPORTED_MODULE_0__.getElement)();
+      state.fin = state.i;
+      state.anf = Math.round(f * state.NF);
+
+      //ref.style.setProperty('--i', Math.round(state.fin.toFixed()));
+      state.i = Math.round(state.fin.toFixed());
+
+      //actions.animate();
+      state.x0 = null;
+      const swipe = new CustomEvent("frame-change-step", {
+        detail: {
+          scroll: false,
+          getIndex: () => {
+            return state.fin;
+          }
+        },
+        bubbles: true
+      });
+      ref.dispatchEvent(swipe);
+      ref.classList.remove('smooth');
+      state.locked = false;
+    },
+    keydown: e => {
+      const {
+        keyCode
+      } = e;
+      let nextFrame;
+      switch (keyCode) {
+        case 37:
+          e.preventDefault();
+          nextFrame = state.i - 1 < 0 ? 0 : state.i - 1;
+          state.locked = true;
+          break;
+        case 39:
+          e.preventDefault();
+          nextFrame = state.i + 1 >= state.N ? state.i : state.i + 1;
+          state.locked = true;
+          break;
+        default:
+          nextFrame = state.i;
+          state.locked = true;
+          return false;
+      }
+      state.i = nextFrame;
+      state.fin = state.i;
+      //ref.style.setProperty('--i', state.i);
+      state.locked = false;
+    },
+    go: e => {
+      const {
+        ref
+      } = (0,_wordpress_interactivity__WEBPACK_IMPORTED_MODULE_0__.getElement)();
+      const context = (0,_wordpress_interactivity__WEBPACK_IMPORTED_MODULE_0__.getContext)();
+      context.dot.selected = true;
+      state.i = parseInt(ref.dataset.index);
+      state.fin = state.i.toFixed();
+    },
+    init: () => {
+      const {
+        ref
+      } = (0,_wordpress_interactivity__WEBPACK_IMPORTED_MODULE_0__.getElement)();
+      const context = (0,_wordpress_interactivity__WEBPACK_IMPORTED_MODULE_0__.getContext)();
+      callbacks.size();
+      state.N = ref.children.length;
+      ref.style.setProperty('--n', state.N.toString());
+      context.ready = true;
+    }
+  },
+  callbacks: {
+    size: () => {
+      state.w = window.innerWidth;
+    },
+    resetSelected: () => {
+      const context = (0,_wordpress_interactivity__WEBPACK_IMPORTED_MODULE_0__.getContext)('design-system-frame');
+      context.list.forEach(item => item.selected = item.index === state.i);
+    }
+  }
+});
+})();
+
+
+//# sourceMappingURL=view.js.map

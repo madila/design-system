@@ -1,1 +1,100 @@
-.wp-block-design-system-frame{--inner-group-max-width:100%;--child-count:1;--i:0;display:grid;max-width:100%;overflow:hidden}.wp-block-design-system-frame__inner-container{border:0;display:grid;width:calc(100%*var(--n));grid-gap:0;grid-auto-columns:100%;grid-auto-flow:column;height:auto;padding-bottom:3rem;scroll-snap-align:center;transform:translate(calc(var(--i, 0)/var(--n)*-100%));transition:all .2s linear}.wp-block-design-system-frame__inner-container:focus{outline:none}.wp-block-design-system-frame__inner-container.smooth{transition:none}.wp-block-design-system-frame__inner-container:not(.ready)>.wp-block-group,.wp-block-design-system-frame__inner-container:not(.ready)>.wp-block-image{display:none}.wp-block-design-system-frame__inner-container:not(.ready)>.wp-block-group:first-child,.wp-block-design-system-frame__inner-container:not(.ready)>.wp-block-image:first-child{display:block}.wp-block-design-system-frame__inner-container>.wp-block-group,.wp-block-design-system-frame__inner-container>.wp-block-image{margin-block-start:0;position:relative;transition:all .3s linear;width:var(--inner-group-max-width);-webkit-user-drag:none;overflow:hidden;pointer-events:none}.wp-block-design-system-frame{overflow-x:visible;position:relative}.wp-block-design-system-frame>.wp-block-design-system-frame__inner-container:has(.wp-block-group:nth-child(2)){counter-reset:item;overflow-x:visible;scroll-behavior:smooth;scroll-margin-top:10rem;scroll-snap-type:x mandatory}.wp-block-cover:has(.wp-block-design-system-frame){scroll-margin-top:10rem;scroll-snap-align:center}.wp-block-design-system-frame__navigation{bottom:1rem;display:flex;gap:var(--wp--preset--spacing--40);justify-content:center;margin:0;position:absolute;width:100%}.wp-block-design-system-frame__navigation li{list-style-type:none}.wp-block-design-system-frame__navigation__dot{background-color:var(--wp--preset--color--contrast);border-radius:50%;display:block;height:1rem;opacity:.5;overflow:hidden;text-indent:-30px;width:1rem}.wp-block-design-system-frame__navigation__dot.active{opacity:1}
+/*!***************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[4].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[4].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[4].use[3]!./src/style.scss ***!
+  \***************************************************************************************************************************************************************************************************************************************/
+/**
+ * The following styles get applied both on the front of your site
+ * and in the editor.
+ *
+ * Replace them with your own styles or remove the file completely.
+ */
+.wp-block-design-system-frame {
+  --inner-group-max-width: 100%;
+  --child-count: 1;
+  --i: 0;
+  display: grid;
+  position: relative;
+  max-width: 100%;
+  overflow: hidden;
+}
+.wp-block-design-system-frame__inner-container {
+  border: 0;
+  width: calc(100% * var(--n));
+  display: grid;
+  grid-gap: 0;
+  grid-auto-flow: column;
+  grid-auto-columns: 100%;
+  height: auto;
+  transition: all 200ms linear;
+  padding-bottom: 3rem;
+  scroll-snap-align: center;
+  transform: translate(calc(var(--i, 0) / var(--n) * -100%));
+}
+.wp-block-design-system-frame__inner-container:focus {
+  outline: none;
+}
+.wp-block-design-system-frame__inner-container.smooth {
+  transition: none;
+}
+.wp-block-design-system-frame__inner-container:not(.ready) > .wp-block-group, .wp-block-design-system-frame__inner-container:not(.ready) > .wp-block-image {
+  display: none;
+}
+.wp-block-design-system-frame__inner-container:not(.ready) > .wp-block-group:first-child, .wp-block-design-system-frame__inner-container:not(.ready) > .wp-block-image:first-child {
+  display: block;
+}
+.wp-block-design-system-frame__inner-container > .wp-block-group, .wp-block-design-system-frame__inner-container > .wp-block-image {
+  position: relative;
+  width: var(--inner-group-max-width);
+  margin-block-start: 0;
+  transition: all 300ms linear;
+  -webkit-user-drag: none;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.wp-block-design-system-frame {
+  position: relative;
+  overflow-x: visible;
+}
+
+.wp-block-design-system-frame > .wp-block-design-system-frame__inner-container:has(.wp-block-group:nth-child(2)) {
+  overflow-x: visible;
+  scroll-margin-top: 10rem;
+  counter-reset: item;
+  scroll-behavior: smooth;
+  scroll-snap-type: x mandatory;
+}
+
+.wp-block-cover:has(.wp-block-design-system-frame) {
+  scroll-snap-align: center;
+  scroll-margin-top: 10rem;
+}
+
+.wp-block-design-system-frame__navigation {
+  position: absolute;
+  bottom: 1rem;
+  display: flex;
+  width: 100%;
+  margin: 0;
+  justify-content: center;
+  gap: var(--wp--preset--spacing--40);
+}
+.wp-block-design-system-frame__navigation li {
+  list-style-type: none;
+}
+
+.wp-block-design-system-frame__navigation__dot {
+  display: block;
+  width: 1rem;
+  height: 1rem;
+  background-color: var(--wp--preset--color--contrast);
+  border-radius: 50%;
+  overflow: hidden;
+  text-indent: -30px;
+  opacity: 0.5;
+}
+
+.wp-block-design-system-frame__navigation__dot.active {
+  opacity: 1;
+}
+
+/*# sourceMappingURL=style-index.css.map*/
