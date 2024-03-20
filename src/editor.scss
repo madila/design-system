@@ -6,23 +6,23 @@
 
 .wp-block-design-system-frame {
 
-  &__inner-container {
+	&__inner-container {
 
-    padding-bottom: 0 !important;
+		padding-bottom: 0 !important;
 
-    > .wp-block {
+		> .wp-block {
 
-      position: unset !important;
-      left: unset !important;
-      max-width: var(--inner-group-max-width);
-      transition: all 300ms linear;
-      opacity: unset !important;
+			position: unset !important;
+			left: unset !important;
+			max-width: var(--inner-group-max-width);
+			transition: all 300ms linear;
+			opacity: unset !important;
 
-    }
+		}
 
-  }
+	}
 
-  &__navigation {
-    display: none;
-  }
+	&__navigation {
+		display: none;
+	}
 }

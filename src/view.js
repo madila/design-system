@@ -3,161 +3,163 @@
  *
  *
  */
-import {getElement, getContext, withScope, store} from '@wordpress/interactivity';
-import {navigateToFrame} from './helpers/Events';
+import { getElement, getContext, store } from '@wordpress/interactivity';
+import { navigateToFrame } from './helpers/Events';
 
-const {state, callbacks, actions} = store( 'design-system-frame', {
-    state: {
-        w: null,
-        NF: 30
-    },
-    actions: {
-        _setFrame: () => {
-            const { ref } = getElement();
-            const context = getContext();
+const { state, callbacks, actions } = store( 'design-system-frame', {
+	state: {
+		w: null,
+		NF: 30,
+	},
+	actions: {
+		_setFrame: () => {
+			const { ref } = getElement();
+			const context = getContext();
 
-            context.locked = false;
-            const target = ref.classList.contains('wp-block-design-system-frame') ? ref.firstElementChild : ref.parentElement;
+			context.locked = false;
+			const target = ref.classList.contains( 'wp-block-design-system-frame' ) ? ref.firstElementChild : ref.parentElement;
 
-            target.style.setProperty('--i', context.current);
-            target.classList.remove('smooth');
+			target.style.setProperty( '--i', context.current );
+			target.classList.remove( 'smooth' );
 
-            const {children} = target.firstElementChild;
-            [...children].forEach((item, index) => {
-                item.ariaCurrent = (index === context.current) ? 'step' : null;
-                item.ariaRoleDescription = "slide";
-                item.role = "tabpanel";
-                //item.tabIndex = 0;
-            });
+			const { children } = target.firstElementChild;
+			[ ...children ].forEach( ( item, index ) => {
+				item.ariaCurrent = ( index === context.current ) ? 'step' : null;
+				item.ariaRoleDescription = 'slide';
+				item.role = 'tabpanel';
+			} );
+		},
+		unify: ( e ) => {
+			return e.changedTouches ? e.changedTouches[ 0 ] : e;
+		},
+		lock: ( e ) => {
+			const { ref } = getElement();
+			const context = getContext();
 
-        },
-        unify: (e) => { return e.changedTouches ? e.changedTouches[0] : e },
-        lock: (e) => {
-            const {ref} = getElement();
-            const context = getContext();
+			context.x0 = actions.unify( e ).clientX;
+			context.locked = true;
+			ref.parentElement.classList.add( 'smooth' );
+		},
+		drag: ( e ) => {
+			e.preventDefault();
+			const context = getContext();
+			if ( ! context.locked ) {
+				return;
+			}
+			context.drag = true;
+			const { ref } = getElement();
+			const unifiedX = actions.unify( e ).clientX;
 
-            context.x0 = actions.unify(e).clientX;
-            context.locked = true;
-            ref.parentElement.classList.add('smooth');
-        },
-        drag: (e) => {
-            e.preventDefault();
-            const context = getContext();
-            if (!context.locked) return;
-            context.drag = true;
-            const { ref } = getElement();
-            const unifiedX = actions.unify(e).clientX;
+			const dx = unifiedX - context.x0,
+				f = +( dx / state.w ).toFixed( 2 );
 
-            let dx = unifiedX - context.x0,
-                f = +(dx / state.w).toFixed(2);
+			ref.parentElement.style.setProperty( '--i', `${ context.current - f }` );
+		},
+		move: ( e ) => {
+			const context = getContext();
+			if ( ! context.locked ) {
+				return;
+			}
+			context.drag = false;
 
-            ref.parentElement.style.setProperty('--i', `${context.current - f}`);
-        },
-        move: (e) => {
-            const context = getContext();
-            if(!context.locked) return;
-            context.drag = false;
+			const dx = actions.unify( e ).clientX - context.x0;
+			const s = Math.sign( dx );
+			let	f = +( s * dx / state.w ).toFixed( 2 );
 
-            let dx = actions.unify(e).clientX - context.x0,
-                s = Math.sign(dx),
-                f = +(s*dx/state.w).toFixed(2);
+			context.ini = context.current - ( s * f );
 
-            context.ini = context.current - s*f;
+			if ( ( context.current > 0 || s < 0 ) && ( context.current < context.N - 1 || s > 0 ) && f > .2 ) {
+				context.current -= s;
+				f = 1 - f;
+			}
 
-            if((context.current > 0 || s < 0) && (context.current < context.N - 1 || s > 0) && f > .2) {
-                context.current -= s;
-                f = 1 - f
-            }
+			context.fin = context.current;
+			context.anf = Math.round( f * context.NF );
 
-            context.fin = context.current;
-            context.anf = Math.round(f*context.NF);
+			context.x0 = null;
 
-            context.x0 = null;
+			context.current = Math.round( context.fin.toFixed() );
 
-            context.current = Math.round(context.fin.toFixed());
+			actions._setFrame( e );
+		},
+		keydown: ( e ) => {
+			const { keyCode } = e;
 
-            actions._setFrame(e);
-        },
-        keydown: (e) => {
-            const { keyCode } = e;
+			const context = getContext();
+			let nextFrame = context.current,
+				foundIndex,
+				shouldUpdate = false;
 
-            const context = getContext();
-            let nextFrame = context.current,
-                foundIndex,
-                shouldUpdate = false;
+			switch ( keyCode ) {
+				case 37:
+					e.preventDefault();
+					foundIndex = context.current - 1;
+					shouldUpdate = foundIndex < 0;
+					nextFrame = shouldUpdate ? 0 : foundIndex;
+					break;
+				case 39:
+					e.preventDefault();
+					foundIndex = context.current + 1;
+					shouldUpdate = foundIndex >= context.N;
+					nextFrame = shouldUpdate ? context.current : foundIndex;
+					break;
+				default:
+					break;
+			}
 
-            switch (keyCode) {
-                case 37:
-                    e.preventDefault();
-                    foundIndex = context.current - 1;
-                    shouldUpdate = foundIndex < 0;
-                    nextFrame = shouldUpdate ? 0 : foundIndex;
-                    break;
-                case 39:
-                    e.preventDefault();
-                    foundIndex = context.current + 1;
-                    shouldUpdate = foundIndex >= context.N;
-                    nextFrame = shouldUpdate ? context.current : foundIndex;
-                    break;
-                default:
-                    break;
-            }
+			context.current = nextFrame;
+			context.fin = context.current;
+			context.locked = shouldUpdate;
 
-            context.current = nextFrame;
-            context.fin = context.current;
-            context.locked = shouldUpdate;
+			actions._setFrame();
+		},
+		dispatchNavigationEvent: ( e ) => {
+			e.preventDefault();
 
-            actions._setFrame();
-        },
-        dispatchNavigationEvent: (e) => {
-            e.preventDefault();
+			const context = getContext();
 
-            const context = getContext();
+			const { ref } = getElement();
+			context.dot.selected = true;
+			context.current = 'index' in ref.dataset ? parseInt( ref.dataset.index ) : context.current;
 
-            const {ref} = getElement();
-            context.dot.selected = true;
-            context.current = 'index' in ref.dataset ? parseInt(ref.dataset.index) : context.current;
+			ref.dispatchEvent( navigateToFrame );
+		},
+		onNavigation: ( e ) => {
+			e.stopPropagation();
+			actions._setFrame();
+		},
+		start: () => {
+			const { ref } = getElement();
+			const context = getContext();
 
-            ref.dispatchEvent(navigateToFrame);
-        },
-        onNavigation: (e) => {
-            e.stopPropagation();
-            actions._setFrame();
-        },
-        start: () => {
-            const { ref } = getElement();
-            const context = getContext();
+			callbacks.size();
 
-            callbacks.size();
+			context.N = ref.children.length;
+			context.ready = true;
 
-            context.N = ref.children.length;
-            context.ready = true;
+			const { x, width } = ref.parentElement.parentElement.getBoundingClientRect();
+			const { innerWidth } = window;
 
-            const { x, width } = ref.parentElement.parentElement.getBoundingClientRect();
-            const { innerWidth } = window;
+			ref.parentElement.style.setProperty( '--n', `${ context.N }` );
+			ref.parentElement.style.setProperty( '--frame-offset-left', `${ x }px` );
+			ref.parentElement.style.setProperty( '--frame-offset-right', `${ innerWidth - ( width + x ) }px` );
 
-            ref.parentElement.style.setProperty('--n', `${context.N}`);
-            ref.parentElement.style.setProperty('--frame-offset-left', `${x}px`);
-            ref.parentElement.style.setProperty('--frame-offset-right', `${innerWidth - (width + x)}px`);
+			actions._setFrame();
+		},
+	},
+	callbacks: {
+		size: () => {
+			state.w = window.innerWidth;
+			const { ref } = getElement();
 
-            actions._setFrame();
-        }
-    },
-    callbacks: {
-        size: () => {
-            state.w = window.innerWidth;
-            const { ref } = getElement();
-
-            const { x, width } = ref.parentElement.parentElement.getBoundingClientRect();
-            const { innerWidth } = window;
-            ref.parentElement.style.setProperty('--frame-offset-left', `${x}px`);
-            ref.parentElement.style.setProperty('--frame-offset-right', `${innerWidth - (width + x)}px`);
-        },
-        resetSelected: (e) => {
-            const context = getContext('design-system-frame');
-            const { ref } = getElement();
-
-            context.list.forEach((item) => item.disabled = (item.index === context.current) ? 'disabled' : null);
-        }
-    },
+			const { x, width } = ref.parentElement.parentElement.getBoundingClientRect();
+			const { innerWidth } = window;
+			ref.parentElement.style.setProperty( '--frame-offset-left', `${ x }px` );
+			ref.parentElement.style.setProperty( '--frame-offset-right', `${ innerWidth - ( width + x ) }px` );
+		},
+		resetSelected: () => {
+			const context = getContext( 'design-system-frame' );
+			context.list.forEach( ( item ) => item.disabled = ( item.index === context.current ) ? 'disabled' : null );
+		},
+	},
 } );

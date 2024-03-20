@@ -4,78 +4,79 @@
  *
  * @see https://developer.wordpress.org/block-editor/reference-guides/packages/packages-block-editor/#useblockprops
  */
-import {useInnerBlocksProps, useBlockProps} from '@wordpress/block-editor';
-import {useEffect, useRef} from "@wordpress/element";
-import {useSelect} from '@wordpress/data';
+import { useInnerBlocksProps, useBlockProps } from '@wordpress/block-editor';
 
+import { WPElement } from '@wordpress/element/build-types';
 /**
  * The save function defines the way in which the different attributes should
  * be combined into the final markup, which is then serialized by the block
  * editor into `post_content`.
  *
+ * @param {WPElement} element
+ * @param {number}    element.clientId
+ * @param {Object}    element.attributes
+ * @param {string}    element.attributes.tagName
+ * @param {string}    element.attributes.maxWidth
+ * @param {Array}     element.attributes.navigation
  * @see https://developer.wordpress.org/block-editor/reference-guides/block-api/block-edit-save/#save
  *
- * @return {WPElement} Element to render.
+ * @return { WPElement } Element to render.
  */
-export default function save({clientId, attributes: {tagName: TagName, maxWidth: MaxWidth, navigation: Navigation}}) {
+export default function save( { clientId, attributes: { tagName: TagName, maxWidth: MaxWidth, navigation: Navigation } } ) {
+	const blockProps = useBlockProps.save( {
+		style: {
+			'--inner-group-max-width': MaxWidth,
+		},
+	} );
 
+	const dots = Navigation.map( ( dot, index ) => {
+		return {
+			id: `${ clientId }-${ parseInt( index ) }`,
+			href: `${ clientId }-${ parseInt( index ) }`,
+			index: parseInt( index ),
+			disabled: null,
+		};
+	} );
 
-    const blockProps = useBlockProps.save({
-        style: {
-            '--inner-group-max-width': MaxWidth
-        }
-    });
+	const { children, ...innerBlocksProps } = useInnerBlocksProps.save( blockProps );
 
-    const dots = Navigation.map((dot, index) => {
-        return {
-            id: `slide-${parseInt(index)}`,
-            href: `#slide-${parseInt(index)}`,
-            index: parseInt(index),
-            disabled: null
-        }
-    });
-
-    const {children, ...innerBlocksProps} = useInnerBlocksProps.save(blockProps);
-
-    return (<TagName {...innerBlocksProps}
-                 aria-atomic="false"
-                 aria-live="polite"
-                 data-wp-interactive="design-system-frame"
-                 data-wp-on--frame-navigates-to="actions.onNavigation"
-                 data-wp-context={`{"ready": false, "drag": false, "locked": false, "x0": null, "N": ${Navigation.length}, "ini": null, "fin": 0, "anf": null, "current": 0, "list": ${JSON.stringify(dots)}}`}>
-            <div className="wp-block-design-system-frame__track">
-                <div className="wp-block-design-system-frame__inner-container"
-                     role="region"
-                     aria-roledescription="carousel"
-                     aria-orientation="horizontal"
-                     data-wp-class--ready="context.ready"
-                     data-wp-init--start="actions.start"
-                     data-wp-on--pointerdown="actions.lock"
-                     data-wp-on--pointermove="actions.drag"
-                     data-wp-on--pointerout="actions.move"
-                     data-wp-on--keydown="actions.keydown"
-                     data-wp-on--pointerup="actions.move"
-                     data-wp-on-window--resize="callbacks.size"
-                     data-wp-watch="callbacks.resetSelected"
-                     tabIndex="0">
-                    {children}
-                </div>
-            </div>
-            <tablist
-                className="wp-block-design-system-frame__navigation" role="group" aria-label="Choose slide to display.">
-                <template data-wp-each--dot="context.list"
-                          data-wp-each-key="context.dot.id">
-                    <tab data-wp-bind--data-href="context.dot.href"
-                           data-wp-on--click="actions.dispatchNavigationEvent"
-                           className="wp-block-design-system-frame__navigation__dot"
-                           data-wp-bind--aria-disabled="context.dot.disabled"
-                           data-wp-bind--data-index="context.dot.index"
-                           data-wp-text="context.dot.index"></tab>
-                </template>
-                { Navigation.map((dot, index) => {
-                    return <tab data-wp-each-child data-href={`#slide-${index}`} data-index={index}
-                                  className="wp-block-design-system-frame__navigation__dot">{index}</tab>
-                }) }
-            </tablist>
-        </TagName>);
+	return ( <TagName { ...innerBlocksProps }
+		aria-atomic="false"
+		aria-live="polite"
+		data-wp-interactive="design-system-frame"
+		data-wp-on--frame-navigates-to="actions.onNavigation"
+		data-wp-context={ `{"ready": false, "drag": false, "locked": false, "x0": null, "N": ${ Navigation.length }, "ini": null, "fin": 0, "anf": null, "current": 0, "list": ${ JSON.stringify( dots ) }}` }>
+		<div className="wp-block-design-system-frame__track">
+			<div className="wp-block-design-system-frame__inner-container"
+				role="group"
+				aria-roledescription="carousel"
+				data-wp-class--ready="context.ready"
+				data-wp-init--start="actions.start"
+				data-wp-on--pointerdown="actions.lock"
+				data-wp-on--pointermove="actions.drag"
+				data-wp-on--pointerout="actions.move"
+				data-wp-on--keydown="actions.keydown"
+				data-wp-on--pointerup="actions.move"
+				data-wp-on-window--resize="callbacks.size"
+				data-wp-watch="callbacks.resetSelected"
+				tabIndex="0">
+				{ children }
+			</div>
+		</div>
+		<tablist
+			className="wp-block-design-system-frame__navigation" role="group" aria-label="Choose slide to display.">
+			<template data-wp-each--dot="context.list"
+				data-wp-each-key="context.dot.id">
+				<tab data-wp-bind--data-href="context.dot.href"
+					data-wp-on--click="actions.dispatchNavigationEvent"
+					className="wp-block-design-system-frame__navigation__dot"
+					data-wp-bind--aria-disabled="context.dot.disabled"
+					data-wp-bind--data-index="context.dot.index"
+					data-wp-text="context.dot.index"></tab>
+			</template>
+			{ Navigation.map( ( dot, index ) => {
+				return <tab key={ dot.id } data-wp-each-child data-href={ `#slide-${ index }` } data-index={ index } className="wp-block-design-system-frame__navigation__dot">{ index }</tab>;
+			} ) }
+		</tablist>
+	</TagName> );
 }

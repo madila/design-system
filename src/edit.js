@@ -14,15 +14,17 @@ import { __ } from '@wordpress/i18n';
 import {
 	useInnerBlocksProps,
 	useBlockProps,
-	InspectorControls
+	InspectorControls,
 } from '@wordpress/block-editor';
 
-import { SelectControl,  __experimentalUnitControl as UnitControl } from '@wordpress/components';
+import { SelectControl, UnitControl } from '@wordpress/components';
 
-import { DEFAULT_TEMPLATE } from "./frame-templates";
+import { DEFAULT_TEMPLATE } from './frame-templates';
 
 import { useSelect, useDispatch } from '@wordpress/data';
-import { useEffect, useRef } from "@wordpress/element";
+import { useEffect, useRef } from '@wordpress/element';
+
+import { WPElement } from '@wordpress/element/build-types';
 
 /**
  * Lets webpack process CSS, SASS or SCSS files referenced in JavaScript files.
@@ -42,7 +44,6 @@ import './editor.scss';
  * @return {JSX.Element}                The control group.
  */
 function GroupAdvancedEditControls( { tagName, onSelectTagName } ) {
-
 	const htmlElementMessages = {
 		header: __(
 			'The <header> element should represent introductory content, typically a group of introductory or navigational aids.'
@@ -64,24 +65,24 @@ function GroupAdvancedEditControls( { tagName, onSelectTagName } ) {
 		),
 	};
 	return (
-			<InspectorControls group="advanced">
-				<SelectControl
-					__nextHasNoMarginBottom
-					label={ __( 'HTML element' ) }
-					options={ [
-						{ label: __( 'Default (<div>)' ), value: 'div' },
-						{ label: '<header>', value: 'header' },
-						{ label: '<main>', value: 'main' },
-						{ label: '<section>', value: 'section' },
-						{ label: '<article>', value: 'article' },
-						{ label: '<aside>', value: 'aside' },
-						{ label: '<footer>', value: 'footer' },
-					] }
-					value={ tagName }
-					onChange={ onSelectTagName }
-					help={ htmlElementMessages[ tagName ] }
-				/>
-			</InspectorControls>
+		<InspectorControls group="advanced">
+			<SelectControl
+				__nextHasNoMarginBottom
+				label={ __( 'HTML element' ) }
+				options={ [
+					{ label: __( 'Default (<div>)' ), value: 'div' },
+					{ label: '<header>', value: 'header' },
+					{ label: '<main>', value: 'main' },
+					{ label: '<section>', value: 'section' },
+					{ label: '<article>', value: 'article' },
+					{ label: '<aside>', value: 'aside' },
+					{ label: '<footer>', value: 'footer' },
+				] }
+				value={ tagName }
+				onChange={ onSelectTagName }
+				help={ htmlElementMessages[ tagName ] }
+			/>
+		</InspectorControls>
 
 	);
 }
@@ -89,14 +90,13 @@ function GroupAdvancedEditControls( { tagName, onSelectTagName } ) {
 /**
  * Render inspector controls for the Group block.
  *
- * @param {Object}   props                 Component props.
+ * @param {Object}   props                  Component props.
  * @param {string}   props.maxWidth         The HTML tag name.
  * @param {Function} props.onMaxWidthChange onChange function for the SelectControl.
  *
  * @return {JSX.Element}                The control group.
  */
 function InnerGroupsControl( { maxWidth, onMaxWidthChange } ) {
-
 	return (
 		<InspectorControls key="setting" group="dimensions">
 			<UnitControl
@@ -113,46 +113,46 @@ function InnerGroupsControl( { maxWidth, onMaxWidthChange } ) {
  * The edit function describes the structure of your block in the context of the
  * editor. This represents what the editor will render when the block is used.
  *
+ * @param {WPElement} element
+ * @param {number}    element.clientId
+ * @param {Object}    element.attributes
+ * @param {Function}  element.setAttributes
  * @see https://developer.wordpress.org/block-editor/reference-guides/block-api/block-edit-save/#edit
  *
  * @return {WPElement} Element to render.
  */
-export default function Edit({
-	 clientId,
-	 attributes,
-	 setAttributes,
- }) {
-
-	const { removeBlock } = useDispatch('core/block-editor');
+export default function Edit( {
+	clientId,
+	attributes,
+	setAttributes,
+} ) {
+	const { removeBlock } = useDispatch( 'core/block-editor' );
 
 	const {
 		tagName: TagName = 'div',
 		maxWidth: MaxWidth = '100%',
 		navigation: Navigation = [],
-		navCount: NavCount = 0
 	} = attributes;
 
-	const { blockCount } = useSelect(select => ({
-		blockCount: select('core/block-editor').getBlockCount(clientId)
-	}));
+	const { blockCount } = useSelect( ( select ) => ( {
+		blockCount: select( 'core/block-editor' ).getBlockCount( clientId ),
+	} ) );
 
 	const previousBlockCount = useRef( blockCount );
 
-	console.log(blockCount);
-
-	const blockProps = useBlockProps({
+	const blockProps = useBlockProps( {
 		style: {
 			'--inner-group-max-width': MaxWidth,
-			'--child-count': blockCount.toNumber
+			'--child-count': blockCount.toNumber,
 		},
-		tabIndex: "0"
-	});
+		tabIndex: '0',
+	} );
 
 	const { children, ...innerBlocksProps } = useInnerBlocksProps(
 		blockProps,
 		{
 			allowedBlocks: [ 'core/group' ],
-			template: DEFAULT_TEMPLATE
+			template: DEFAULT_TEMPLATE,
 		}
 	);
 
@@ -163,20 +163,18 @@ export default function Edit({
 
 		previousBlockCount.current = blockCount;
 
-		const Dots = [...Array(blockCount)].map((e, i) => {
+		const Dots = [ ...Array( blockCount ) ].map( ( e, i ) => {
 			return {
-				dot: `#slide-${i+1}`
-			}
-		});
+				dot: `#slide-${ i + 1 }`,
+			};
+		} );
 
 		setAttributes( { navigation: Dots, navCount: blockCount } );
-
-	}, [ blockCount, clientId ] );
-
+	}, [ blockCount, clientId, removeBlock, setAttributes ] );
 
 	const requiresNavigation = () => {
 		return blockCount > 1;
-	}
+	};
 
 	return (
 		<>
@@ -189,17 +187,17 @@ export default function Edit({
 			<InnerGroupsControl
 				maxWidth={ MaxWidth }
 				onMaxWidthChange={ ( value ) => {
-					setAttributes( { maxWidth: value } )
-				}}
+					setAttributes( { maxWidth: value } );
+				} }
 			/>
 			<TagName { ...innerBlocksProps }>
 				<div className="wp-block-design-system-frame__inner-container">
 					{ children }
 				</div>
 				{ requiresNavigation() && <div className="wp-block-design-system-frame__navigation">
-					{ Navigation.map((number, index) => {
-						return <a href={`#slide-${index+1}`} data-index={index} className="wp-block-design-system-frame__navigation__dot">{index+1}</a>
-					}) }
+					{ Navigation.map( ( number, index ) => {
+						return <a href={ `#slide-${ index + 1 }` } key={ index } data-index={ index } className="wp-block-design-system-frame__navigation__dot">{ index + 1 }</a>;
+					} ) }
 				</div> }
 			</TagName>
 		</>
