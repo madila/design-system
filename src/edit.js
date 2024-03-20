@@ -24,8 +24,6 @@ import { DEFAULT_TEMPLATE } from './frame-templates';
 import { useSelect, useDispatch } from '@wordpress/data';
 import { useEffect, useRef } from '@wordpress/element';
 
-import { WPElement } from '@wordpress/element/build-types';
-
 /**
  * Lets webpack process CSS, SASS or SCSS files referenced in JavaScript files.
  * Those files can contain any CSS code that gets applied to the editor.

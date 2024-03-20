@@ -42,7 +42,7 @@ body {
 		height: auto;
 		transition: transform 300ms var(--animation-timing-function);
 		padding-bottom: 3rem;
-		transform: translate(calc(var(--i, 0)/var(--n) *- 100%));
+		transform: translate(calc(var(--i, 0)/var(--n) * -100%));
 
 
 		&:focus {
@@ -155,4 +155,5 @@ body {
 		background-color: var(--wp--preset--color--accent-3);
 		opacity: 1;
 	}
+
 }

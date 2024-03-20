@@ -22,9 +22,9 @@
  *
  * @see https://developer.wordpress.org/reference/functions/register_block_type/
  */
-function create_block_conditional_frame_block_init() {
+function create_block_design_system_frame_block_init() {
 	register_block_type_from_metadata( __DIR__ . '/build' );
 }
-add_action( 'init', 'create_block_conditional_frame_block_init' );
+add_action( 'init', 'create_block_design_system_frame_block_init' );
 
 

@@ -6,7 +6,6 @@
  */
 import { useInnerBlocksProps, useBlockProps } from '@wordpress/block-editor';
 
-import { WPElement } from '@wordpress/element/build-types';
 /**
  * The save function defines the way in which the different attributes should
  * be combined into the final markup, which is then serialized by the block

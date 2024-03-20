@@ -106,7 +106,7 @@
 		"navigation": {
 			"type": "array",
 			"source": "query",
-			"selector": "button",
+			"selector": ".wp-block-design-system-frame__navigation__dot",
 			"query": {
 				"dot": {
 					"type": "string",
