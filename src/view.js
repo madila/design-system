@@ -27,8 +27,6 @@ const {state, callbacks, actions} = store( 'design-system-frame', {
 
             const target = ref.classList.contains('wp-block-design-system-frame') ? ref.firstElementChild : ref.parentElement;
 
-            console.log(target);
-
             target.style.setProperty('--i', state.current);
             target.classList.remove('smooth');
         },

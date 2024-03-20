@@ -5,6 +5,10 @@
  * Replace them with your own styles or remove the file completely.
  */
 
+html {
+	scroll-behavior: smooth;
+}
+
 .wp-block-design-system-frame {
 	--inner-group-max-width: 100%;
 	--animation-timing-function: linear;
