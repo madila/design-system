@@ -40,11 +40,10 @@ export default function save({clientId, attributes: {tagName: TagName, maxWidth:
     return (<TagName {...innerBlocksProps}
                  data-wp-interactive="design-system-frame"
                  data-wp-on--frame-navigates-to="actions.onNavigation"
-                 data-wp-context={`{"ready": false, "list": ${JSON.stringify(dots)}}`}>
+                 data-wp-context={`{"ready": false, "drag": false, "locked": false, "x0": null, "N": ${Navigation.length}, "ini": null, "fin": 0, "anf": null, "current": 0, "list": ${JSON.stringify(dots)}}`}>
             <div className="wp-block-design-system-frame__track">
             <div className="wp-block-design-system-frame__inner-container"
                  data-wp-class--ready="context.ready"
-                 data-wp-style----n="state.N"
                  data-wp-init--start="actions.start"
                  data-wp-on--pointerdown="actions.lock"
                  data-wp-on--pointermove="actions.drag"
@@ -61,16 +60,16 @@ export default function save({clientId, attributes: {tagName: TagName, maxWidth:
                 className="wp-block-design-system-frame__navigation">
                 <template data-wp-each--dot="context.list"
                           data-wp-each-key="context.dot.id">
-                    <li><a data-wp-bind--href="context.dot.href"
+                    <li><button data-wp-bind--data-href="context.dot.href"
                            data-wp-on--click="actions.dispatchNavigationEvent"
                            className="wp-block-design-system-frame__navigation__dot"
-                           data-wp-class--active="context.dot.selected"
+                           data-wp-bind--disabled="context.dot.selected"
                            data-wp-bind--data-index="context.dot.index"
-                           data-wp-text="context.dot.index"></a></li>
+                           data-wp-text="context.dot.index"></button></li>
                 </template>
                 { Navigation.map((dot, index) => {
-                    return <li data-wp-each-child><a href={`#slide-${index}`} data-index={index}
-                                  className="wp-block-design-system-frame__navigation__dot">{index}</a></li>
+                    return <li data-wp-each-child><button data-href={`#slide-${index}`} data-index={index}
+                                  className="wp-block-design-system-frame__navigation__dot">{index}</button></li>
                 }) }
             </ul>
         </TagName>);

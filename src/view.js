@@ -8,101 +8,101 @@ import {navigateToFrame} from './helpers/Events';
 
 const {state, callbacks, actions} = store( 'design-system-frame', {
     state: {
-        locked: false,
-        scrolled: false,
-        drag: true,
-        current: 0,
         w: null,
-        x0: null,
-        N: 0,
-        ini: null,
-        fin: 0,
-        anf: null,
         NF: 30
     },
     actions: {
         _setFrame: () => {
-            state.locked = false;
             const { ref } = getElement();
+            const context = getContext();
 
+            context.locked = false;
             const target = ref.classList.contains('wp-block-design-system-frame') ? ref.firstElementChild : ref.parentElement;
 
-            target.style.setProperty('--i', state.current);
+            target.style.setProperty('--i', context.current);
             target.classList.remove('smooth');
+
+            const {children} = target.firstElementChild;
+            [...children].forEach((item, index) => {
+                item.ariaCurrent = (index === context.current) ? 'step' : null;
+            });
+
         },
         unify: (e) => { return e.changedTouches ? e.changedTouches[0] : e },
         lock: (e) => {
             const {ref} = getElement();
+            const context = getContext();
 
-            state.x0 = actions.unify(e).clientX;
-            state.locked = true;
+            context.x0 = actions.unify(e).clientX;
+            context.locked = true;
             ref.parentElement.classList.add('smooth');
         },
         drag: (e) => {
             e.preventDefault();
-            if (!state.locked) return;
-            state.drag = true;
+            const context = getContext();
+            if (!context.locked) return;
+            context.drag = true;
             const { ref } = getElement();
             const unifiedX = actions.unify(e).clientX;
 
-            let dx = unifiedX - state.x0,
+            let dx = unifiedX - context.x0,
                 f = +(dx / state.w).toFixed(2);
 
-            ref.parentElement.style.setProperty('--i', `${state.current - f}`);
+            ref.parentElement.style.setProperty('--i', `${context.current - f}`);
         },
         move: (e) => {
-            if(!state.locked) return;
-            state.drag = false;
+            const context = getContext();
+            if(!context.locked) return;
+            context.drag = false;
 
-            let dx = actions.unify(e).clientX - state.x0,
+            let dx = actions.unify(e).clientX - context.x0,
                 s = Math.sign(dx),
                 f = +(s*dx/state.w).toFixed(2);
 
-            state.ini = state.current - s*f;
+            context.ini = context.current - s*f;
 
-            if((state.current > 0 || s < 0) && (state.current < state.N - 1 || s > 0) && f > .2) {
-                state.current -= s;
+            if((context.current > 0 || s < 0) && (context.current < context.N - 1 || s > 0) && f > .2) {
+                context.current -= s;
                 f = 1 - f
             }
 
-            const { ref } = getElement();
+            context.fin = context.current;
+            context.anf = Math.round(f*context.NF);
 
-            state.fin = state.current;
-            state.anf = Math.round(f*state.NF);
+            context.x0 = null;
 
-            state.x0 = null;
-
-            state.current = Math.round(state.fin.toFixed());
+            context.current = Math.round(context.fin.toFixed());
 
             actions._setFrame(e);
         },
         keydown: (e) => {
             const { keyCode } = e;
 
-            let nextFrame = state.current,
+            const context = getContext();
+            let nextFrame = context.current,
                 foundIndex,
                 shouldUpdate = false;
 
             switch (keyCode) {
                 case 37:
                     e.preventDefault();
-                    foundIndex = state.current - 1;
+                    foundIndex = context.current - 1;
                     shouldUpdate = foundIndex < 0;
                     nextFrame = shouldUpdate ? 0 : foundIndex;
                     break;
                 case 39:
                     e.preventDefault();
-                    foundIndex = state.current + 1;
-                    shouldUpdate = foundIndex >= state.N;
-                    nextFrame = shouldUpdate ? state.current : foundIndex;
+                    foundIndex = context.current + 1;
+                    shouldUpdate = foundIndex >= context.N;
+                    nextFrame = shouldUpdate ? context.current : foundIndex;
                     break;
                 default:
                     break;
             }
 
-            state.current = nextFrame;
-            state.fin = state.current;
-            state.locked = shouldUpdate;
+            context.current = nextFrame;
+            context.fin = context.current;
+            context.locked = shouldUpdate;
 
             actions._setFrame();
         },
@@ -113,12 +113,11 @@ const {state, callbacks, actions} = store( 'design-system-frame', {
 
             const {ref} = getElement();
             context.dot.selected = true;
-            state.current = 'index' in ref.dataset ? parseInt(ref.dataset.index) : state.current;
+            context.current = 'index' in ref.dataset ? parseInt(ref.dataset.index) : context.current;
 
             ref.dispatchEvent(navigateToFrame);
-
         },
-        onNavigation: function*(e) {
+        onNavigation: (e) => {
             e.stopPropagation();
             actions._setFrame();
         },
@@ -128,13 +127,16 @@ const {state, callbacks, actions} = store( 'design-system-frame', {
 
             callbacks.size();
 
-            state.N = ref.children.length;
+            context.N = ref.children.length;
             context.ready = true;
 
             const { x, width } = ref.parentElement.parentElement.getBoundingClientRect();
             const { innerWidth } = window;
+
+            ref.parentElement.style.setProperty('--n', `${context.N}`);
             ref.parentElement.style.setProperty('--frame-offset-left', `${x}px`);
             ref.parentElement.style.setProperty('--frame-offset-right', `${innerWidth - (width + x)}px`);
+
             actions._setFrame();
         }
     },
@@ -148,9 +150,11 @@ const {state, callbacks, actions} = store( 'design-system-frame', {
             ref.parentElement.style.setProperty('--frame-offset-left', `${x}px`);
             ref.parentElement.style.setProperty('--frame-offset-right', `${innerWidth - (width + x)}px`);
         },
-        resetSelected: () => {
+        resetSelected: (e) => {
             const context = getContext('design-system-frame');
-            context.list.forEach((item) => item.selected = item.index === state.current);
+            const { ref } = getElement();
+
+            context.list.forEach((item) => item.selected = (item.index === context.current) ? 'disabled' : null);
         }
     },
 } );
