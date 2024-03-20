@@ -25,6 +25,9 @@ const {state, callbacks, actions} = store( 'design-system-frame', {
             const {children} = target.firstElementChild;
             [...children].forEach((item, index) => {
                 item.ariaCurrent = (index === context.current) ? 'step' : null;
+                item.ariaRoleDescription = "slide";
+                item.role = "tabpanel";
+                //item.tabIndex = 0;
             });
 
         },
@@ -154,7 +157,7 @@ const {state, callbacks, actions} = store( 'design-system-frame', {
             const context = getContext('design-system-frame');
             const { ref } = getElement();
 
-            context.list.forEach((item) => item.selected = (item.index === context.current) ? 'disabled' : null);
+            context.list.forEach((item) => item.disabled = (item.index === context.current) ? 'disabled' : null);
         }
     },
 } );

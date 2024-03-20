@@ -31,18 +31,23 @@ export default function save({clientId, attributes: {tagName: TagName, maxWidth:
             id: `slide-${parseInt(index)}`,
             href: `#slide-${parseInt(index)}`,
             index: parseInt(index),
-            disabled: false
+            disabled: null
         }
     });
 
     const {children, ...innerBlocksProps} = useInnerBlocksProps.save(blockProps);
 
     return (<TagName {...innerBlocksProps}
+                 aria-atomic="false"
+                 aria-live="polite"
                  data-wp-interactive="design-system-frame"
                  data-wp-on--frame-navigates-to="actions.onNavigation"
                  data-wp-context={`{"ready": false, "drag": false, "locked": false, "x0": null, "N": ${Navigation.length}, "ini": null, "fin": 0, "anf": null, "current": 0, "list": ${JSON.stringify(dots)}}`}>
             <div className="wp-block-design-system-frame__track">
                 <div className="wp-block-design-system-frame__inner-container"
+                     role="region"
+                     aria-roledescription="carousel"
+                     aria-orientation="horizontal"
                      data-wp-class--ready="context.ready"
                      data-wp-init--start="actions.start"
                      data-wp-on--pointerdown="actions.lock"
@@ -56,21 +61,21 @@ export default function save({clientId, attributes: {tagName: TagName, maxWidth:
                     {children}
                 </div>
             </div>
-            <ul
-                className="wp-block-design-system-frame__navigation">
+            <tablist
+                className="wp-block-design-system-frame__navigation" role="group" aria-label="Choose slide to display.">
                 <template data-wp-each--dot="context.list"
                           data-wp-each-key="context.dot.id">
-                    <li><button data-wp-bind--data-href="context.dot.href"
+                    <tab data-wp-bind--data-href="context.dot.href"
                            data-wp-on--click="actions.dispatchNavigationEvent"
                            className="wp-block-design-system-frame__navigation__dot"
-                           data-wp-bind--disabled="context.dot.disabled"
+                           data-wp-bind--aria-disabled="context.dot.disabled"
                            data-wp-bind--data-index="context.dot.index"
-                           data-wp-text="context.dot.index"></button></li>
+                           data-wp-text="context.dot.index"></tab>
                 </template>
                 { Navigation.map((dot, index) => {
-                    return <li data-wp-each-child><button data-href={`#slide-${index}`} data-index={index}
-                                  className="wp-block-design-system-frame__navigation__dot">{index}</button></li>
+                    return <tab data-wp-each-child data-href={`#slide-${index}`} data-index={index}
+                                  className="wp-block-design-system-frame__navigation__dot">{index}</tab>
                 }) }
-            </ul>
+            </tablist>
         </TagName>);
 }

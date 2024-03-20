@@ -106,12 +106,12 @@
 		"navigation": {
 			"type": "array",
 			"source": "query",
-			"selector": "a",
+			"selector": "button",
 			"query": {
 				"dot": {
 					"type": "string",
 					"source": "attribute",
-					"attribute": "href",
+					"attribute": "data-href",
 					"default": "#"
 				}
 			}
