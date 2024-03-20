@@ -1,0 +1,21 @@
+<div style="--inner-group-max-width:100%" class="wp-block-design-system-frame" data-wp-interactive="design-system-frame"
+     data-wp-on--frame-navigates-to="actions.onNavigation"
+     data-wp-context="{&quot;ready&quot;: false, &quot;drag&quot;: false, &quot;locked&quot;: false, &quot;x0&quot;: null, &quot;N&quot;: 0, &quot;ini&quot;: null, &quot;fin&quot;: 0, &quot;anf&quot;: null, &quot;current&quot;: 0, &quot;list&quot;: []}">
+    <div class="wp-block-design-system-frame__track">
+        <div class="wp-block-design-system-frame__inner-container" data-wp-class--ready="context.ready"
+             data-wp-init--start="actions.start" data-wp-on--pointerdown="actions.lock"
+             data-wp-on--pointermove="actions.drag" data-wp-on--pointerout="actions.move"
+             data-wp-on--keydown="actions.keydown" data-wp-on--pointerup="actions.move"
+             data-wp-on-window--resize="callbacks.size" data-wp-watch="callbacks.resetSelected" tabindex="0"></div>
+    </div>
+    <ul class="wp-block-design-system-frame__navigation">
+        <template data-wp-each--dot="context.list" data-wp-each-key="context.dot.id">
+            <li>
+                <button data-wp-bind--data-href="context.dot.href" data-wp-on--click="actions.dispatchNavigationEvent"
+                        class="wp-block-design-system-frame__navigation__dot"
+                        data-wp-bind--disabled="context.dot.disabled" data-wp-bind--data-index="context.dot.index"
+                        data-wp-text="context.dot.index"></button>
+            </li>
+        </template>
+    </ul>
+</div>
