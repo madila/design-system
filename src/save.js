@@ -22,7 +22,7 @@ export default function save({clientId, attributes: {tagName: TagName, maxWidth:
 
     const blockProps = useBlockProps.save({
         style: {
-            '--inner-group-max-width': MaxWidth, '--child-count': Navigation.length.toString()
+            '--inner-group-max-width': MaxWidth
         }
     });
 
@@ -39,27 +39,30 @@ export default function save({clientId, attributes: {tagName: TagName, maxWidth:
 
     return (<TagName {...innerBlocksProps}
                  data-wp-interactive="design-system-frame"
+                 data-wp-on--frame-navigates-to="actions.onNavigation"
                  data-wp-context={`{"ready": false, "list": ${JSON.stringify(dots)}}`}>
+            <div className="wp-block-design-system-frame__track">
             <div className="wp-block-design-system-frame__inner-container"
                  data-wp-class--ready="context.ready"
-                 data-wp-init--start="actions.init"
+                 data-wp-style----n="state.N"
+                 data-wp-init--start="actions.start"
                  data-wp-on--pointerdown="actions.lock"
                  data-wp-on--pointermove="actions.drag"
                  data-wp-on--pointerout="actions.move"
                  data-wp-on--keydown="actions.keydown"
                  data-wp-on--pointerup="actions.move"
                  data-wp-on-window--resize="callbacks.size"
-                 data-wp-style----i="state.i"
                  data-wp-watch="callbacks.resetSelected"
                  tabIndex="0">
                 {children}
+            </div>
             </div>
             <ul
                 className="wp-block-design-system-frame__navigation">
                 <template data-wp-each--dot="context.list"
                           data-wp-each-key="context.dot.id">
                     <li><a data-wp-bind--href="context.dot.href"
-                           data-wp-on--click="actions.go"
+                           data-wp-on--click="actions.dispatchNavigationEvent"
                            className="wp-block-design-system-frame__navigation__dot"
                            data-wp-class--active="context.dot.selected"
                            data-wp-bind--data-index="context.dot.index"
