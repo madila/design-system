@@ -199,11 +199,6 @@ export default function Edit( {
 				<div className="wp-block-design-system-frame__inner-container">
 					{ children }
 				</div>
-				{ requiresNavigation() && <div className="wp-block-design-system-frame__navigation">
-					{ Navigation.map( ( number, index ) => {
-						return <a href={ `#slide-${ index + 1 }` } key={ index } data-index={ index } className="wp-block-design-system-frame__navigation__dot">{ index + 1 }</a>;
-					} ) }
-				</div> }
 			</TagName>
 		</>
 	);
