@@ -126,22 +126,22 @@ export default function Edit( {
 } ) {
 	const { removeBlock } = useDispatch( 'core/block-editor' );
 
-	const {
-		tagName: TagName = 'div',
-		maxWidth: MaxWidth = '100%',
-		navigation: Navigation = [],
-		blockId
-	} = attributes;
-
-	useEffect( () => {
-		if ( ! blockId ) {
-			setAttributes( { blockId: clientId } );
-		}
-	}, [] );
-
 	const { blockCount } = useSelect( ( select ) => ( {
 		blockCount: select( 'core/block-editor' ).getBlockCount( clientId ),
 	} ) );
+
+	const {
+		tagName: TagName = 'div',
+		maxWidth: MaxWidth = '100%',
+		blockId: BlockName = clientId,
+		navigation: Navigation = []
+	} = attributes;
+
+	useEffect( () => {
+		if ( ! BlockName ) {
+			setAttributes( { blockId: clientId } );
+		}
+	}, [] );
 
 	const previousBlockCount = useRef( blockCount );
 
@@ -150,7 +150,6 @@ export default function Edit( {
 			'--inner-group-max-width': MaxWidth,
 			'--child-count': blockCount.toNumber,
 		},
-		tabIndex: '0',
 	} );
 
 	const { children, ...innerBlocksProps } = useInnerBlocksProps(
@@ -170,16 +169,12 @@ export default function Edit( {
 
 		const Dots = [ ...Array( blockCount ) ].map( ( e, i ) => {
 			return {
-				dot: `#slide-${ i + 1 }`,
+				dot: `#${BlockName}-${ i + 1 }`,
 			};
 		} );
 
 		setAttributes( { navigation: Dots, navCount: blockCount } );
 	}, [ blockCount, clientId, removeBlock, setAttributes ] );
-
-	const requiresNavigation = () => {
-		return blockCount > 1;
-	};
 
 	return (
 		<>

@@ -89,11 +89,9 @@
 		"blockId": {
 			"type": "string"
 		},
-		"animation": {
-			"type": "string",
-			"default": "slide-in",
-			"source": "attribute",
-			"attribute": "data-animation"
+		"blockCount": {
+			"type": "number",
+			"default": 0
 		},
 		"templateLock": {
 			"type": [ "string", "boolean" ],
@@ -101,10 +99,6 @@
 		},
 		"allowedBlocks": {
 			"type": "array"
-		},
-		"navCount": {
-			"type": "number",
-			"default": 0
 		},
 		"navigation": {
 			"type": "array",

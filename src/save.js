@@ -17,27 +17,28 @@ import { useInnerBlocksProps, useBlockProps } from '@wordpress/block-editor';
  * @param {string}    element.attributes.tagName
  * @param {string}    element.attributes.maxWidth
  * @param {Array}     element.attributes.navigation
+ * @param {Array}     element.attributes.navCount
  * @see https://developer.wordpress.org/block-editor/reference-guides/block-api/block-edit-save/#save
  *
  * @return { WPElement } Element to render.
  */
-export default function save( { attributes: { blockId, tagName: TagName, maxWidth: MaxWidth, navCount: NavCount, navigation: Navigation } } ) {
+export default function save( { attributes: { blockId: BlockName, tagName: TagName, maxWidth: MaxWidth, blockCount: NavCount, navigation: Navigation } } ) {
 	const blockProps = useBlockProps.save( {
 		style: {
 			'--inner-group-max-width': MaxWidth,
 		}
 	} );
 
-	console.log(blockId);
+	let dots = [];
 
-	const dots = Navigation.map( ( dot, index ) => {
+	Navigation && Navigation.map( ( dot, index ) => {
 		const intIndex = parseInt( index );
-		return {
-			id: `${ blockId }-tab-${ intIndex }`,
-			href: `#${ blockId }-${ intIndex }`,
+		dots.push( {
+			id: `${ BlockName }-tab-${ intIndex }`,
+			href: `#${ BlockName }-${ intIndex }`,
 			index: intIndex,
 			disabled: null
-		};
+		});
 	} );
 
 	const { children, ...innerBlocksProps } = useInnerBlocksProps.save( blockProps );
@@ -50,7 +51,7 @@ export default function save( { attributes: { blockId, tagName: TagName, maxWidt
 		data-wp-context={ `{"ready": false, "drag": false, "locked": false, "x0": null, "N": ${ NavCount }, "ini": null, "fin": 0, "anf": null, "current": 0, "list": ${ JSON.stringify( dots ) }}` }>
 		<div className="wp-block-design-system-frame__track">
 			<div className="wp-block-design-system-frame__inner-container"
-				role="group" id={blockId}
+				role="group" id={BlockName}
 				aria-roledescription="carousel"
 				data-wp-class--ready="context.ready"
 				data-wp-init--start="actions.start"
@@ -76,7 +77,7 @@ export default function save( { attributes: { blockId, tagName: TagName, maxWidt
 					data-wp-bind--data-index="context.dot.index"
 					data-wp-text="context.dot.index"></tab>
 			</template>
-			{ Navigation.map( ( dot, index ) => {
+			{ Navigation && Navigation.map( ( dot, index ) => {
 				return <a role="tab" key={ dot.id } id={ dot.id } aria-controls={dot.href} data-wp-each-child data-href={ dot.href } data-index={ index } className="wp-block-design-system-frame__navigation__dot">{ index }</a>;
 			} ) }
 		</tablist>
