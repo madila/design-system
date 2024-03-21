@@ -17,7 +17,7 @@ import {
 	InspectorControls,
 } from '@wordpress/block-editor';
 
-import { SelectControl, UnitControl } from '@wordpress/components';
+import { SelectControl, __experimentalUnitControl as UnitControl } from '@wordpress/components';
 
 import { DEFAULT_TEMPLATE } from './frame-templates';
 
@@ -130,7 +130,14 @@ export default function Edit( {
 		tagName: TagName = 'div',
 		maxWidth: MaxWidth = '100%',
 		navigation: Navigation = [],
+		blockId
 	} = attributes;
+
+	useEffect( () => {
+		if ( ! blockId ) {
+			setAttributes( { blockId: clientId } );
+		}
+	}, [] );
 
 	const { blockCount } = useSelect( ( select ) => ( {
 		blockCount: select( 'core/block-editor' ).getBlockCount( clientId ),

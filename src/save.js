@@ -12,7 +12,7 @@ import { useInnerBlocksProps, useBlockProps } from '@wordpress/block-editor';
  * editor into `post_content`.
  *
  * @param {WPElement} element
- * @param {number}    element.clientId
+ * @param {string}    element.clientId
  * @param {Object}    element.attributes
  * @param {string}    element.attributes.tagName
  * @param {string}    element.attributes.maxWidth
@@ -21,19 +21,22 @@ import { useInnerBlocksProps, useBlockProps } from '@wordpress/block-editor';
  *
  * @return { WPElement } Element to render.
  */
-export default function save( { clientId, attributes: { tagName: TagName, maxWidth: MaxWidth, navigation: Navigation } } ) {
+export default function save( { attributes: { blockId, tagName: TagName, maxWidth: MaxWidth, navCount: NavCount, navigation: Navigation } } ) {
 	const blockProps = useBlockProps.save( {
 		style: {
 			'--inner-group-max-width': MaxWidth,
-		},
+		}
 	} );
 
+	console.log(blockId);
+
 	const dots = Navigation.map( ( dot, index ) => {
+		const intIndex = parseInt( index );
 		return {
-			id: `${ clientId }-${ parseInt( index ) }`,
-			href: `${ clientId }-${ parseInt( index ) }`,
-			index: parseInt( index ),
-			disabled: null,
+			id: `${ blockId }-tab-${ intIndex }`,
+			href: `#${ blockId }-${ intIndex }`,
+			index: intIndex,
+			disabled: null
 		};
 	} );
 
@@ -44,10 +47,10 @@ export default function save( { clientId, attributes: { tagName: TagName, maxWid
 		aria-live="polite"
 		data-wp-interactive="design-system-frame"
 		data-wp-on--frame-navigates-to="actions.onNavigation"
-		data-wp-context={ `{"ready": false, "drag": false, "locked": false, "x0": null, "N": ${ Navigation.length }, "ini": null, "fin": 0, "anf": null, "current": 0, "list": ${ JSON.stringify( dots ) }}` }>
+		data-wp-context={ `{"ready": false, "drag": false, "locked": false, "x0": null, "N": ${ NavCount }, "ini": null, "fin": 0, "anf": null, "current": 0, "list": ${ JSON.stringify( dots ) }}` }>
 		<div className="wp-block-design-system-frame__track">
 			<div className="wp-block-design-system-frame__inner-container"
-				role="group"
+				role="group" id={blockId}
 				aria-roledescription="carousel"
 				data-wp-class--ready="context.ready"
 				data-wp-init--start="actions.start"
@@ -74,7 +77,7 @@ export default function save( { clientId, attributes: { tagName: TagName, maxWid
 					data-wp-text="context.dot.index"></tab>
 			</template>
 			{ Navigation.map( ( dot, index ) => {
-				return <tab key={ dot.id } data-wp-each-child data-href={ `#slide-${ index }` } data-index={ index } className="wp-block-design-system-frame__navigation__dot">{ index }</tab>;
+				return <a role="tab" key={ dot.id } id={ dot.id } aria-controls={dot.href} data-wp-each-child data-href={ dot.href } data-index={ index } className="wp-block-design-system-frame__navigation__dot">{ index }</a>;
 			} ) }
 		</tablist>
 	</TagName> );

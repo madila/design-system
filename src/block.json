@@ -86,6 +86,9 @@
 			"type": "string",
 			"default": "div"
 		},
+		"blockId": {
+			"type": "string"
+		},
 		"animation": {
 			"type": "string",
 			"default": "slide-in",
