@@ -48,7 +48,7 @@ export default function save( { attributes: { blockId: BlockName, tagName: TagNa
 		aria-live="polite"
 		data-wp-interactive="design-system-frame"
 		data-wp-on--frame-navigates-to="actions.onNavigation"
-		data-wp-context={ `{"ready": false, "drag": false, "locked": false, "x0": null, "N": ${ NavCount }, "ini": null, "fin": 0, "anf": null, "current": 0, "list": ${ JSON.stringify( dots ) }}` }>
+		data-wp-context={ `{"ready": false, "drag": false, "locked": false, "tension": 0, "x0": null, "N": ${ NavCount }, "ini": null, "fin": 0, "anf": null, "current": 0, "list": ${ JSON.stringify( dots ) }}` }>
 		<div className="wp-block-design-system-frame__track">
 			<div className="wp-block-design-system-frame__inner-container"
 				role="group" id={BlockName}

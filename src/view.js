@@ -67,6 +67,7 @@ const { state, callbacks, actions } = store( 'design-system-frame', {
 			if ( ! context.locked ) {
 				return;
 			}
+
 			context.drag = true;
 			const { ref } = getElement();
 			const unifiedX = actions.unify( e ).clientX;
@@ -74,7 +75,11 @@ const { state, callbacks, actions } = store( 'design-system-frame', {
 			const dx = unifiedX - context.x0,
 				f = +( dx / state.w ).toFixed( 2 );
 
+			context.tension++;
 			ref.parentElement.style.setProperty( '--i', `${ context.current - f }` );
+			if(context.tension > 20) {
+				actions.move(e);
+			}
 		},
 		move: ( e ) => {
 			const context = getContext();
@@ -83,10 +88,7 @@ const { state, callbacks, actions } = store( 'design-system-frame', {
 			}
 			context.drag = false;
 
-			const { ref } = getElement();
-
-			ref.onpointermove = null;
-			ref.releasePointerCapture(e.pointerId);
+			context.tension = 0;
 
 			const dx = actions.unify( e ).clientX - context.x0;
 			const s = Math.sign( dx );
@@ -109,6 +111,11 @@ const { state, callbacks, actions } = store( 'design-system-frame', {
 			context.x0 = null;
 
 			context.current = Math.round( context.fin.toFixed() );
+
+			const { ref } = getElement();
+
+			ref.onpointermove = null;
+			ref.releasePointerCapture(e.pointerId);
 
 			actions._setFrame( e );
 
