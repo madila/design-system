@@ -150,10 +150,10 @@ body {
 	transition: opacity .2s linear;
 	width: 4rem;
 	height: 0.6rem;
-	border: 2px solid var(--wp--preset--color--base);
 
 	&:not([aria-disabled]) {
 		cursor: pointer;
+		border: 2px solid color-mix(in srgb, transparent 70%, var(--wp--preset--color--base));
 	}
 
 	&[aria-disabled],
