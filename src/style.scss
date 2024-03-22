@@ -79,11 +79,11 @@ body {
 			transition: all 60ms linear;
 			-webkit-user-drag: none;
 			pointer-events: none;
-			opacity: 0;
+			//opacity: 0;
 
 			&[aria-current="step"] {
 				transition: all 200ms linear 200ms;
-				opacity: 1;
+				//opacity: 1;
 			}
 
 		}

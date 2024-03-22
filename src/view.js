@@ -55,6 +55,11 @@ const { state, callbacks, actions } = store( 'design-system-frame', {
 			context.x0 = actions.unify( e ).clientX;
 			context.locked = true;
 			ref.parentElement.classList.add( 'smooth' );
+			ref.onpointermove = withScope((e) => {
+				actions.drag(e)
+			});
+			ref.setPointerCapture(e.pointerId);
+
 		},
 		drag: ( e ) => {
 			e.preventDefault();
@@ -78,6 +83,11 @@ const { state, callbacks, actions } = store( 'design-system-frame', {
 			}
 			context.drag = false;
 
+			const { ref } = getElement();
+
+			ref.onpointermove = null;
+			ref.releasePointerCapture(e.pointerId);
+
 			const dx = actions.unify( e ).clientX - context.x0;
 			const s = Math.sign( dx );
 			let	f = +( s * dx / state.w ).toFixed( 2 );
@@ -89,8 +99,7 @@ const { state, callbacks, actions } = store( 'design-system-frame', {
 				f = 1 - f;
 			}
 
-			context.fin = context.current;
-			console.log(f, state.NF);
+			context.fin = context.current;;
 
 			context.anf = Math.round( f * state.NF );
 
@@ -102,6 +111,7 @@ const { state, callbacks, actions } = store( 'design-system-frame', {
 			context.current = Math.round( context.fin.toFixed() );
 
 			actions._setFrame( e );
+
 		},
 		keydown: ( e ) => {
 			const { keyCode } = e;
