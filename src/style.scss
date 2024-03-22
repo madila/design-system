@@ -33,7 +33,6 @@ body {
 	}
 
 	&__inner-container {
-		touch-action: pan-x;
 		border: 0;
 		width: calc(var(--inner-group-max-width) * var(--n));
 		gap: 0 !important;
