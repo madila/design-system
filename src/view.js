@@ -48,7 +48,7 @@ const { state, callbacks, actions } = store( 'design-system-frame', {
 		},
 		unify: ( e ) => {
 			if(!e) return state.clientX;
-			state.clientX = e.changedTouches ? e.changedTouches[ 0 ] : e
+			state.clientX = e.changedTouches ? e.changedTouches[ 0 ] : e;
 			return state.clientX;
 		},
 		lock: ( e ) => {
