@@ -15,22 +15,6 @@ const { state, callbacks, actions } = store( 'design-system-frame', {
 		clientX: 0
 	},
 	actions: {
-		runAnimation: (cf = 0) => {
-			const context = getContext('design-system-frame');
-
-			context.current = context.ini + (context.fin - context.ini)*callbacks.bounceOut(cf/context.anf);
-
-			if(cf === context.anf) {
-				actions.cancelAnimation();
-				return
-			}
-			state.rID = requestAnimationFrame(withScope(() => actions.runAnimation(++cf)))
-
-		},
-		cancelAnimation: () => {
-			cancelAnimationFrame(state.rID);
-			state.rID = null
-		},
 		_setFrame: () => {
 			const { ref } = getElement();
 			const context = getContext();
@@ -71,20 +55,20 @@ const { state, callbacks, actions } = store( 'design-system-frame', {
 				return;
 			}
 
-			context.drag = true;
 			const { ref } = getElement();
+
+			context.drag = true;
+			context.tension++;
+
 			const unifiedX = actions.unify( e ).clientX;
 
 			const dx = unifiedX - context.x0,
-				f = +( dx / state.w ).toFixed( 2 );
+				threshold = +( dx / state.w ).toFixed( 2 );
 
-			context.tension++;
-
-			const frame = context.current - f;
+			const frame = context.current - threshold;
 			ref.parentElement.style.setProperty( '--i', `${ frame }` );
 
-			const threshold = frame - context.current;
-			if(threshold > 0.4 || threshold < -0.4 || context.tension > 20) {
+			if(threshold > 0.4 || threshold < -0.4 || context.tension > 12) {
 				actions.move(e);
 			}
 
@@ -101,29 +85,35 @@ const { state, callbacks, actions } = store( 'design-system-frame', {
 			const s = Math.sign( dx );
 			let	f = +( s * dx / state.w ).toFixed( 2 );
 
+			const threshold = +( dx / state.w ).toFixed( 2 );
+
 			context.ini = context.current - ( s * f );
-
-			if ( ( context.current > 0 || s < 0 ) && ( context.current < context.N - 1 || s > 0 ) && f > .2 ) {
-				context.current -= s;
-				f = 1 - f;
-			}
-
 			context.fin = context.current;
-
-			context.anf = Math.round( f * state.NF );
-
-			state.n = 2 + Math.round(f);
-			actions.runAnimation();
-
-			context.x0 = null;
-
-			context.current = Math.round( context.fin.toFixed() );
 
 			const { ref } = getElement();
 
 			ref.onpointermove = null;
-
 			e && ref.releasePointerCapture(e.pointerId);
+
+			state.n = 2 + Math.round(f);
+			context.x0 = null;
+
+			let nextFrame;
+
+			if(threshold > 0) {
+				nextFrame = context.current - 1;
+				if(nextFrame <= 0) {
+					nextFrame = 0;
+				}
+			} else {
+				nextFrame = context.current + 1;
+				const MaxLength = context.N - 1;
+				if(nextFrame > MaxLength) {
+					nextFrame = MaxLength;
+				}
+			}
+
+			context.current = nextFrame;
 
 			actions._setFrame( e );
 
