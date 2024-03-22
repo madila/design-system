@@ -16,7 +16,7 @@ body {
 
 .wp-block-design-system-frame {
 	--inner-group-max-width: 100%;
-	--animation-timing-function: linear;
+	--animation-timing-function: cubic-bezier(.15,.7,.75,.65);
 	--frame-container-max-width: 100%;
 	--i: 0;
 	display: grid;
@@ -28,11 +28,14 @@ body {
 		padding-right: var(--frame-offset-right);
 		padding-left: var(--frame-offset-left);
 		transform: translateX(calc(var(--frame-offset-left) * -1));
+		perspective: 1000px;
+		backface-visibility: hidden;
 		box-sizing: border-box;
 		overflow: visible;
 	}
 
 	&__inner-container {
+		touch-action: none;
 		border: 0;
 		width: calc(var(--inner-group-max-width) * var(--n));
 		gap: 0 !important;
@@ -42,6 +45,7 @@ body {
 		transition: transform 300ms var(--animation-timing-function);
 		padding-bottom: 3rem;
 		transform: translate(calc(var(--i, 0)/var(--n) * -100%));
+		transform-style: preserve-3d;
 
 
 		&:focus {
@@ -75,14 +79,17 @@ body {
 			position: relative;
 			width: var(--inner-group-max-width);
 			margin-block-start: 0;
-			transition: all 60ms linear;
+			transition: all 100ms linear;
 			-webkit-user-drag: none;
 			pointer-events: none;
 			opacity: 0;
+			transform: scale(0.9);
+			transform-style: preserve-3d;
 
 			&[aria-current="step"] {
-				transition: all 200ms linear 200ms;
+				transition: all 200ms linear 100ms;
 				opacity: 1;
+				transform: none;
 			}
 
 		}

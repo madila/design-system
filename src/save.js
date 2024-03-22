@@ -56,6 +56,7 @@ export default function save( { attributes: { blockId: BlockName, tagName: TagNa
 				data-wp-class--ready="context.ready"
 				data-wp-init--start="actions.start"
 				data-wp-on--pointerdown="actions.lock"
+				data-wp-on--pointercancel="actions.move"
 				data-wp-on--pointerup="actions.move"
 				data-wp-on--keydown="actions.keydown"
 				data-wp-on-window--resize="callbacks.size"
