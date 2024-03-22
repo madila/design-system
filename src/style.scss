@@ -125,14 +125,14 @@ body {
 
 
 .wp-block-design-system-frame__navigation {
-	position: absolute;
-	bottom: 1rem;
+	top: calc(100% - 2rem);
 	display: flex;
-	width: 100%;
-	margin: 0;
+	gap: var(--wp--preset--spacing--10);
 	justify-content: center;
+	margin: 0;
 	padding-left: 0;
-	gap: var(--wp--preset--spacing--40);
+	position: absolute;
+	width: 100%;
 
 	li {
 		list-style-type: none;
@@ -141,16 +141,16 @@ body {
 
 
 .wp-block-design-system-frame__navigation__dot {
+	background-color: currentColor;
+	border-radius: 2rem;
 	display: block;
-	width: 1rem;
-	height: 1rem;
-	background-color: var(--wp--preset--color--contrast);
-	border-radius: 50%;
-	border: 0;
+	opacity: .4;
 	overflow: hidden;
 	text-indent: -30px;
-	opacity: 0.4;
-	transition: opacity 200ms linear;
+	transition: opacity .2s linear;
+	width: 4rem;
+	height: 0.6rem;
+	border: 2px solid var(--wp--preset--color--base);
 
 	&:not([aria-disabled]) {
 		cursor: pointer;
