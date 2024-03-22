@@ -11,7 +11,8 @@ const { state, callbacks, actions } = store( 'design-system-frame', {
 		w: null,
 		NF: 50,
 		rID: null,
-		n: null
+		n: null,
+		clientX: 0
 	},
 	actions: {
 		runAnimation: (cf = 0) => {
@@ -46,7 +47,9 @@ const { state, callbacks, actions } = store( 'design-system-frame', {
 			} );
 		},
 		unify: ( e ) => {
-			return e.changedTouches ? e.changedTouches[ 0 ] : e;
+			if(!e) return state.clientX;
+			state.clientX = e.changedTouches ? e.changedTouches[ 0 ] : e
+			return state.clientX;
 		},
 		lock: ( e ) => {
 			const { ref } = getElement();
@@ -76,17 +79,21 @@ const { state, callbacks, actions } = store( 'design-system-frame', {
 				f = +( dx / state.w ).toFixed( 2 );
 
 			context.tension++;
-			ref.parentElement.style.setProperty( '--i', `${ context.current - f }` );
-			if(context.tension > 20) {
+
+			const frame = context.current - f;
+			ref.parentElement.style.setProperty( '--i', `${ frame }` );
+
+			const threshold = frame - context.current;
+			if(threshold > 0.4 || threshold < -0.4 || context.tension > 20) {
 				actions.move(e);
 			}
+
 		},
 		move: ( e ) => {
 			const context = getContext();
 			if ( ! context.locked ) {
 				return;
 			}
-			context.drag = false;
 
 			context.tension = 0;
 
@@ -101,7 +108,7 @@ const { state, callbacks, actions } = store( 'design-system-frame', {
 				f = 1 - f;
 			}
 
-			context.fin = context.current;;
+			context.fin = context.current;
 
 			context.anf = Math.round( f * state.NF );
 
@@ -115,7 +122,8 @@ const { state, callbacks, actions } = store( 'design-system-frame', {
 			const { ref } = getElement();
 
 			ref.onpointermove = null;
-			ref.releasePointerCapture(e.pointerId);
+
+			e && ref.releasePointerCapture(e.pointerId);
 
 			actions._setFrame( e );
 
