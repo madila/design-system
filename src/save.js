@@ -73,11 +73,10 @@ export default function save( { attributes: { blockId: BlockName, tagName: TagNa
 					data-wp-on--click="actions.dispatchNavigationEvent"
 					className="wp-block-design-system-frame__navigation__dot"
 					data-wp-bind--aria-disabled="context.dot.disabled"
-					data-wp-bind--data-index="context.dot.index"
-					data-wp-text="context.dot.index"></tab>
+					data-wp-bind--data-index="context.dot.index"><span data-wp-text="context.dot.index"></span></tab>
 			</template>
 			{ Navigation && Navigation.map( ( dot, index ) => {
-				return <a role="tab" key={ dot.id } id={ dot.id } aria-controls={dot.href} data-wp-each-child data-href={ dot.href } data-index={ index } className="wp-block-design-system-frame__navigation__dot">{ index }</a>;
+				return <a role="tab" key={ dot.id } id={ dot.id } aria-controls={dot.href} data-wp-each-child data-href={ dot.href } data-index={ index } className="wp-block-design-system-frame__navigation__dot"><span>{ index }</span></a>;
 			} ) }
 		</tablist>
 	</TagName> );

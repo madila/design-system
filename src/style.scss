@@ -19,46 +19,30 @@ body {
 	--animation-timing-function: cubic-bezier(.15,.7,.75,.65);
 	--frame-container-max-width: 100%;
 	--i: 0;
-	display: grid;
+	--n: 0;
 	position: relative;
-	max-width: 100%;
+	max-width: var(--inner-group-max-width);
 
-	&__track {
-		width: 100vw;
-		padding-right: var(--frame-offset-right);
-		padding-left: var(--frame-offset-left);
-		transform: translateX(calc(var(--frame-offset-left) * -1));
+	.wp-block-design-system-frame {
+		position: relative;
 		perspective: 1000px;
 		backface-visibility: hidden;
 		box-sizing: border-box;
 		overflow: visible;
 	}
 
+	&__track {
+		position: relative;
+		perspective: 1000px;
+		max-width: var(--inner-group-max-width);
+		backface-visibility: hidden;
+		box-sizing: border-box;
+		overflow: visible;
+	}
+
 	&__inner-container {
-		touch-action: pan-y;
-		border: 0;
-		width: calc(var(--inner-group-max-width) * var(--n));
-		gap: 0 !important;
-		display: flex;
-		flex-wrap: nowrap;
-		height: auto;
-		transition: transform 300ms var(--animation-timing-function);
-		padding-bottom: 3rem;
-		transform: translate(calc(var(--i, 0)/var(--n) * -100%));
-		transform-style: preserve-3d;
 
-
-		&:focus {
-			outline: none;
-		}
-
-		&.smooth {
-			transition: none;
-			will-change: transform;
-		}
-
-		&:not(.ready) {
-
+		[data-wp-interactive] &:not(.ready) {
 			> .wp-block-group,
 			> .wp-block-image {
 				display: none;
@@ -69,37 +53,62 @@ body {
 			}
 		}
 
-		> .wp-block-group,
-		> .wp-block-image {
-
-			.wp-block-image {
-				user-select: none;
-			}
-
-			position: relative;
-			width: var(--inner-group-max-width);
-			margin-block-start: 0;
-			transition: all 100ms linear;
-			-webkit-user-drag: none;
-			pointer-events: none;
-			opacity: 0;
-			transform: scale(0.9);
+		&.ready {
+			touch-action: pan-y;
+			border: 0;
+			width: calc(var(--inner-group-max-width) * var(--n));
+			gap: 0 !important;
+			display: flex;
+			flex-wrap: nowrap;
+			height: auto;
+			transition: transform 300ms var(--animation-timing-function);
+			transform: translate(calc(var(--i, 0) / var(--n) * -100%));
 			transform-style: preserve-3d;
 
-			&[aria-current="step"] {
-				transition: all 200ms linear 100ms;
-				opacity: 1;
-				transform: none;
+			&:focus {
+				outline: none;
 			}
 
+			&.smooth {
+				transition: none;
+				will-change: transform;
+			}
+
+			> .wp-block-group,
+			> .wp-block-image {
+
+				.wp-block-image {
+					user-select: none;
+				}
+
+				position: relative;
+				width: var(--inner-group-max-width);
+				margin-block-start: 0;
+				transition: all 100ms linear;
+				-webkit-user-drag: none;
+				pointer-events: none;
+				opacity: 0;
+				transform: scale(0.9);
+				transform-style: preserve-3d;
+				display: block;
+
+				&[aria-current="step"] {
+					transition: all 200ms linear 100ms;
+					opacity: 1;
+					transform: none;
+				}
+
+			}
 		}
+
 	}
+
 }
 
 
 .wp-block-design-system-frame {
 	position: relative;
-	//overflow-x: visible;
+
 	&:has(.is-style-rounded) [aria-roledescription="slide"] {
 		border-radius: var(--wp--preset--spacing--20);
 	}
@@ -123,16 +132,25 @@ body {
 	scroll-margin-top: 10rem;
 }
 
-
 .wp-block-design-system-frame__navigation {
-	top: calc(100% - 2rem);
+
+	.wp-block-design-system-frame.aligncenter & {
+		justify-content: center;
+	}
+
+	.wp-block-design-system-frame.alignright & {
+		justify-content: flex-end;
+	}
+
+	justify-content: flex-start;
+	right: 0;
+	left: 0;
+	top: calc(100% - var(--wp--preset--spacing--40));
 	display: flex;
 	gap: var(--wp--preset--spacing--10);
-	justify-content: center;
 	margin: 0;
-	padding-left: 0;
+	padding: var(--wp--preset--spacing--10) var(--wp--preset--spacing--25);
 	position: absolute;
-	width: 100%;
 
 	li {
 		list-style-type: none;
@@ -141,15 +159,16 @@ body {
 
 
 .wp-block-design-system-frame__navigation__dot {
-	background-color: currentColor;
 	border-radius: 2rem;
 	display: block;
-	opacity: .4;
+	border: 2px solid color-mix(in srgb, transparent 70%, currentColor);
+	background-color: color-mix(in srgb, transparent 30%, var(--wp--preset--color--base));
 	overflow: hidden;
 	text-indent: -30px;
-	transition: opacity .2s linear;
-	width: 4rem;
-	height: 0.6rem;
+	transition: all .2s linear;
+	max-width: 20%;
+	min-width: 3rem;
+	height: var(--wp--preset--spacing--5);
 
 	&:not([aria-disabled]) {
 		cursor: pointer;
@@ -158,8 +177,8 @@ body {
 
 	&[aria-disabled],
 	&:hover {
+		border: 2px solid color-mix(in srgb, transparent 70%, var(--wp--preset--color--base));
 		background-color: var(--wp--preset--color--accent-3);
-		opacity: 1;
 	}
 
 }

@@ -12,10 +12,7 @@
     "__experimentalOnEnter": true,
     "__experimentalOnMerge": true,
     "__experimentalSettings": true,
-    "align": [
-      "wide",
-      "full"
-    ],
+    "align": true,
     "anchor": true,
     "ariaLabel": true,
     "html": false,

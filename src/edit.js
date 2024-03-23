@@ -192,7 +192,11 @@ export default function Edit( {
 			/>
 			<TagName { ...innerBlocksProps }>
 				<div className="wp-block-design-system-frame__inner-container">
-					{ children }
+					<div className="wp-block-design-system-frame__track">
+						<div className="wp-block-design-system-frame__inner-container">
+							{ children }
+						</div>
+					</div>
 				</div>
 			</TagName>
 		</>

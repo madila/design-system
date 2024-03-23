@@ -197,10 +197,9 @@ const { state, callbacks, actions } = store( 'design-system-frame', {
 			state.w = window.innerWidth;
 			const { ref } = getElement();
 
-			const { x, width } = ref.parentElement.parentElement.getBoundingClientRect();
-			const { innerWidth } = window;
-			ref.parentElement.style.setProperty( '--frame-offset-left', `${ x }px` );
-			ref.parentElement.style.setProperty( '--frame-offset-right', `${ innerWidth - ( width + x ) }px` );
+			const { x, width } = ref.parentElement.getBoundingClientRect();
+
+			ref.parentElement.style.setProperty( '--inner-group-max-width', `${ width }px` );
 		},
 		resetSelected: () => {
 			const context = getContext( 'design-system-frame' );
