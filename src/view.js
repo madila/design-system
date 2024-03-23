@@ -45,8 +45,10 @@ const { state, callbacks, actions } = store( 'design-system-frame', {
 			ref.onpointermove = withScope((e) => {
 				actions.drag(e)
 			});
+			ref.parentElement.onmouseleave = withScope((e) => {
+				actions.move(e)
+			});
 			ref.setPointerCapture(e.pointerId);
-
 		},
 		drag: ( e ) => {
 			e.preventDefault();
@@ -74,6 +76,7 @@ const { state, callbacks, actions } = store( 'design-system-frame', {
 
 		},
 		move: ( e ) => {
+
 			const context = getContext();
 			if ( ! context.locked ) {
 				return;
@@ -93,7 +96,8 @@ const { state, callbacks, actions } = store( 'design-system-frame', {
 			const { ref } = getElement();
 
 			ref.onpointermove = null;
-			e && ref.releasePointerCapture(e.pointerId);
+			ref.parentElement.onmouseleave = null;
+			e.hasOwnProperty('pointerId') && ref.releasePointerCapture(e.pointerId);
 
 			state.n = 2 + Math.round(f);
 			context.x0 = null;

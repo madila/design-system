@@ -42,64 +42,62 @@ body {
 
 	&__inner-container {
 
-		[data-wp-interactive] &:not(.ready) {
-			> .wp-block-group,
-			> .wp-block-image {
-				display: none;
+		//&.is-horizontal {
 
-				&:first-child {
-					display: block;
-				}
-			}
-		}
-
-		&.ready {
-			touch-action: pan-y;
-			border: 0;
-			width: calc(var(--inner-group-max-width) * var(--n));
-			gap: 0 !important;
-			display: flex;
-			flex-wrap: nowrap;
-			height: auto;
-			transition: transform 300ms var(--animation-timing-function);
-			transform: translate(calc(var(--i, 0) / var(--n) * -100%));
-			transform-style: preserve-3d;
-
-			&:focus {
-				outline: none;
-			}
-
-			&.smooth {
-				transition: none;
-				will-change: transform;
-			}
-
-			> .wp-block-group,
-			> .wp-block-image {
-
-				.wp-block-image {
-					user-select: none;
-				}
-
-				position: relative;
-				width: var(--inner-group-max-width);
-				margin-block-start: 0;
-				transition: all 100ms linear;
-				-webkit-user-drag: none;
-				pointer-events: none;
-				opacity: 0;
-				transform: scale(0.9);
-				transform-style: preserve-3d;
+			&:first-child {
 				display: block;
+			}
 
-				&[aria-current="step"] {
-					transition: all 200ms linear 100ms;
-					opacity: 1;
-					transform: none;
+			&.ready {
+				touch-action: pan-y;
+				border: 0;
+				width: calc(var(--inner-group-max-width) * var(--n));
+				gap: 0 !important;
+				display: flex;
+				flex-wrap: nowrap;
+				height: auto;
+				transition: transform 300ms var(--animation-timing-function);
+				transform: translate(calc(var(--i, 0) / var(--n) * -100%));
+				transform-style: preserve-3d;
+
+
+				&:focus {
+					outline: none;
 				}
 
+				&.smooth {
+					transition: none;
+					will-change: transform;
+				}
+
+				> .wp-block-group,
+				> .wp-block-image {
+
+					.wp-block-image {
+						user-select: none;
+					}
+
+					position: relative;
+					width: var(--inner-group-max-width);
+					margin-block-start: 0;
+					transition: all 100ms linear;
+					-webkit-user-drag: none;
+					pointer-events: none;
+					opacity: 0;
+					transform: scale(0.9);
+					transform-style: preserve-3d;
+					display: block;
+
+					&[aria-current="step"] {
+						transition: all 200ms linear 100ms;
+						opacity: 1;
+						transform: none;
+					}
+
+				}
 			}
-		}
+
+		//}
 
 	}
 
@@ -110,12 +108,12 @@ body {
 	position: relative;
 
 	&:has(.is-style-rounded) [aria-roledescription="slide"] {
-		border-radius: var(--wp--preset--spacing--20);
+		//border-radius: var(--wp--preset--spacing--20);
 	}
 
 	&:focus-within [aria-current="step"] {
-		border-radius: var(--wp--preset--spacing--20);
-		outline: 4px solid color-mix(in srgb, transparent 70%, var(--wp--preset--color--accent-3));
+		//border-radius: var(--wp--preset--spacing--20);
+		//outline: 4px solid color-mix(in srgb, transparent 70%, var(--wp--preset--color--accent-3));
 	}
 }
 
