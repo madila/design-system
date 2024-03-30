@@ -12,7 +12,8 @@ const { state, callbacks, actions } = store( 'design-system-frame', {
 		NF: 50,
 		rID: null,
 		n: null,
-		clientX: 0
+		clientX: 0,
+		timer: null
 	},
 	actions: {
 		_setFrame: () => {
@@ -22,8 +23,8 @@ const { state, callbacks, actions } = store( 'design-system-frame', {
 			context.locked = false;
 			const target = ref.classList.contains( 'wp-block-design-system-frame' ) ? ref.firstElementChild : ref.parentElement;
 
+			ref.closest('.wp-block-design-system-frame').classList.remove( 'scroll-smoothing' );
 			target.style.setProperty( '--i', context.current );
-			target.classList.remove( 'smooth' );
 
 			const { children } = target.firstElementChild;
 			[ ...children ].forEach( ( item, index ) => {
@@ -36,22 +37,45 @@ const { state, callbacks, actions } = store( 'design-system-frame', {
 			return state.clientX;
 		},
 		lock: ( e ) => {
+			e.preventDefault();
+
 			const { ref } = getElement();
 			const context = getContext();
 
+			const move = withScope((e) => {
+				actions.move(e);
+			});
+
+			const drag = withScope((e) => {
+				actions.drag(e);
+			});
+
+			ref.onmousemove = drag;
+
+			ref.onmouseup = move;
+
+			ref.onmouseleave = move;
+
+			ref.ontouchmove = drag;
+
+			ref.ontouchend = move;
+
+			ref.ontouchcancel = move;
+
 			context.x0 = actions.unify( e ).clientX;
 			context.locked = true;
-			ref.parentElement.classList.add( 'smooth' );
-			ref.onpointermove = withScope((e) => {
-				actions.drag(e)
-			});
-			ref.parentElement.onmouseleave = withScope((e) => {
-				actions.move(e)
-			});
-			ref.setPointerCapture(e.pointerId);
+
+			const frame = ref.closest('.wp-block-design-system-frame');
+			frame.classList.add( 'scroll-smoothing' );
+			frame.classList.add( 'user-interacting' );
+
+			//e.hasOwnProperty('pointerId') && ref.setPointerCapture(e.pointerId);
+
 		},
 		drag: ( e ) => {
 			e.preventDefault();
+			console.log(e.type, 'drag');
+
 			const context = getContext();
 			if ( ! context.locked ) {
 				return;
@@ -59,7 +83,6 @@ const { state, callbacks, actions } = store( 'design-system-frame', {
 
 			const { ref } = getElement();
 
-			context.drag = true;
 			context.tension++;
 
 			const unifiedX = actions.unify( e ).clientX;
@@ -68,19 +91,28 @@ const { state, callbacks, actions } = store( 'design-system-frame', {
 				threshold = +( dx / state.w ).toFixed( 2 );
 
 			const frame = context.current - threshold;
+
 			ref.parentElement.style.setProperty( '--i', `${ frame }` );
 
-			if(threshold > 0.4 || threshold < -0.4 || context.tension > 12) {
+			if(threshold > 0.8 || threshold < -0.4 || context.tension > 18) {
 				actions.move(e);
 			}
 
 		},
 		move: ( e ) => {
-
+			e.preventDefault();
+			console.log(e.type);
 			const context = getContext();
-			if ( ! context.locked ) {
+			const { ref } = getElement();
+
+			console.log(context.current);
+			if (!context.locked) {
+				console.log('not locked');
+				actions._setFrame( e );
 				return;
 			}
+
+			context.locked = false;
 
 			context.tension = 0;
 
@@ -93,14 +125,26 @@ const { state, callbacks, actions } = store( 'design-system-frame', {
 			context.ini = context.current - ( s * f );
 			context.fin = context.current;
 
-			const { ref } = getElement();
 
-			ref.onpointermove = null;
-			ref.parentElement.onmouseleave = null;
-			e.hasOwnProperty('pointerId') && ref.releasePointerCapture(e.pointerId);
+			ref.onmousemove = null;
+
+			ref.onmouseup = null;
+
+			ref.onmouseleave = null;
+
+			ref.ontouchmove = null;
+
+			ref.ontouchend = null;
+
+			ref.ontouchcancel = null;
 
 			state.n = 2 + Math.round(f);
 			context.x0 = null;
+
+			if(!threshold) {
+				actions._setFrame( e );
+				return;
+			}
 
 			let nextFrame;
 
@@ -124,7 +168,7 @@ const { state, callbacks, actions } = store( 'design-system-frame', {
 		},
 		keydown: ( e ) => {
 			const { keyCode } = e;
-
+			console.log(e.type);
 			const context = getContext();
 			let nextFrame = context.current,
 				foundIndex,
@@ -151,7 +195,7 @@ const { state, callbacks, actions } = store( 'design-system-frame', {
 			context.fin = context.current;
 			context.locked = shouldUpdate;
 
-			actions._setFrame();
+			actions._setFrame(e);
 		},
 		dispatchNavigationEvent: ( e ) => {
 			e.preventDefault();
@@ -168,21 +212,16 @@ const { state, callbacks, actions } = store( 'design-system-frame', {
 			e.stopPropagation();
 			actions._setFrame();
 		},
-		start: () => {
+		start: (e) => {
 			const { ref } = getElement();
 			const context = getContext();
 
-			callbacks.size();
+			console.log(e, context);
 
 			context.N = ref.children.length;
 			context.ready = true;
 
-			const { x, width } = ref.parentElement.parentElement.getBoundingClientRect();
-			const { innerWidth } = window;
-
 			ref.parentElement.style.setProperty( '--n', `${ context.N }` );
-			ref.parentElement.style.setProperty( '--frame-offset-left', `${ x }px` );
-			ref.parentElement.style.setProperty( '--frame-offset-right', `${ innerWidth - ( width + x ) }px` );
 
 			const { children } = ref;
 			[ ...children ].forEach( ( item, index ) => {
@@ -192,18 +231,45 @@ const { state, callbacks, actions } = store( 'design-system-frame', {
 				item.id = `${ref.id}-${index}`;
 			} );
 
-
+			actions.resize(e);
 			actions._setFrame();
+
 		},
-	},
-	callbacks: {
-		size: () => {
-			state.w = window.innerWidth;
+		resize: (e) => {
+
+			console.log(e);
 			const { ref } = getElement();
 
-			const { x, width } = ref.parentElement.getBoundingClientRect();
+			const frame = ref.closest('.wp-block-design-system-frame');
+			frame.classList.add('scroll-smoothing');
 
-			ref.parentElement.style.setProperty( '--inner-group-max-width', `${ width }px` );
+			const frameStyles = window.getComputedStyle(frame, null)
+			let width = frame.clientWidth;
+				width -=
+				parseFloat(frameStyles.paddingLeft) +
+				parseFloat(frameStyles.paddingRight);
+			frame.style.setProperty( '--inner-group-max-width', `${ width }px` );
+
+			const { innerWidth } = window;
+			state.w = innerWidth;
+
+		}
+	},
+	callbacks: {
+		autoPlay: () => {
+			setInterval(
+				withScope( () => {
+
+				} ),
+				3_000
+			);
+		},
+		size: (event) => {
+			const context = getContext();
+			if(context.timer) clearTimeout(context.timer);
+			context.timer = setTimeout(withScope(() => {
+				actions.resize(event);
+			}),10, event);
 		},
 		resetSelected: () => {
 			const context = getContext( 'design-system-frame' );

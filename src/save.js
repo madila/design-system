@@ -48,16 +48,15 @@ export default function save( { attributes: { blockId: BlockName, tagName: TagNa
 		aria-live="polite"
 		data-wp-interactive="design-system-frame"
 		data-wp-on--frame-navigates-to="actions.onNavigation"
-		data-wp-context={ `{"ready": false, "drag": false, "locked": false, "tension": 0, "x0": null, "N": ${ NavCount }, "ini": null, "fin": 0, "anf": null, "current": 0, "list": ${ JSON.stringify( dots ) }}` }>
+		data-wp-context={ `{"ready": false, "timer": null, "drag": false, "locked": false, "tension": 0, "x0": null, "N": ${ NavCount }, "ini": null, "fin": 0, "anf": null, "current": 0, "list": ${ JSON.stringify( dots ) }}` }>
 		<div className="wp-block-design-system-frame__track">
 			<div className="wp-block-design-system-frame__inner-container"
 				role="group" id={BlockName}
 				aria-roledescription="carousel"
 				data-wp-class--ready="context.ready"
 				data-wp-init--start="actions.start"
-				data-wp-on--pointerdown="actions.lock"
-				data-wp-on--pointercancel="actions.move"
-				data-wp-on--pointerup="actions.move"
+				data-wp-on--touchstart="actions.lock"
+				data-wp-on--mousedown="actions.lock"
 				data-wp-on--keydown="actions.keydown"
 				data-wp-on-window--resize="callbacks.size"
 				data-wp-watch="callbacks.resetSelected"

@@ -4,7 +4,7 @@
  * Description:       Example block scaffolded with Create Block tool.
  * Requires at least: 6.5
  * Requires PHP:      7.0
- * Version:           0.1.3.1
+ * Version:           0.1.4
  * Author:            Ruben Madila
  * License:           GPL-2.0-or-later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
@@ -22,9 +22,9 @@
  *
  * @see https://developer.wordpress.org/reference/functions/register_block_type/
  */
-function create_block_design_system_frame_block_init() {
+function design_system_frame_block_init(): void {
 	register_block_type_from_metadata( __DIR__ . '/build' );
 }
-add_action( 'init', 'create_block_design_system_frame_block_init' );
+add_action( 'init', 'design_system_frame_block_init' );
 
 

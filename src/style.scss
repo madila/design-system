@@ -21,31 +21,35 @@ body {
 	--i: 0;
 	--n: 0;
 	position: relative;
-	max-width: var(--inner-group-max-width);
+	width: 100%;
+	box-sizing: border-box;
 
 	.wp-block-design-system-frame {
-		position: relative;
-		perspective: 1000px;
-		backface-visibility: hidden;
-		box-sizing: border-box;
-		overflow: visible;
+
+		.scroll-smoothing & {
+			overflow: visible;
+		}
+
 	}
 
 	&__track {
 		position: relative;
 		perspective: 1000px;
-		max-width: var(--inner-group-max-width);
+		max-width: 100%;
 		backface-visibility: hidden;
 		box-sizing: border-box;
 		overflow: visible;
+
 	}
 
 	&__inner-container {
 
-		//&.is-horizontal {
 
-			&:first-child {
-				display: block;
+			> .wp-block-group, > .wp-block-image {
+				&:first-child {
+					display: block;
+				}
+				display: none;
 			}
 
 			&.ready {
@@ -65,7 +69,7 @@ body {
 					outline: none;
 				}
 
-				&.smooth {
+				.scroll-smoothing & {
 					transition: none;
 					will-change: transform;
 				}
@@ -80,7 +84,7 @@ body {
 					position: relative;
 					width: var(--inner-group-max-width);
 					margin-block-start: 0;
-					transition: all 100ms linear;
+					transition: transform 200ms linear, opacity 100ms linear;
 					-webkit-user-drag: none;
 					pointer-events: none;
 					opacity: 0;
@@ -89,7 +93,7 @@ body {
 					display: block;
 
 					&[aria-current="step"] {
-						transition: all 200ms linear 100ms;
+						transition: transform, opacity 200ms linear;
 						opacity: 1;
 						transform: none;
 					}
@@ -97,7 +101,6 @@ body {
 				}
 			}
 
-		//}
 
 	}
 
@@ -159,8 +162,8 @@ body {
 .wp-block-design-system-frame__navigation__dot {
 	border-radius: 2rem;
 	display: block;
-	border: 2px solid color-mix(in srgb, transparent 70%, currentColor);
-	background-color: color-mix(in srgb, transparent 30%, var(--wp--preset--color--base));
+	border: 2px solid color-mix(in srgb, transparent 80%, currentColor);
+	background-color: color-mix(in srgb, currentColor 50%, var(--wp--preset--color--base));
 	overflow: hidden;
 	text-indent: -30px;
 	transition: all .2s linear;
