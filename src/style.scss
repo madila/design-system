@@ -25,14 +25,8 @@ html {
 	position: relative;
 	width: 100%;
 	box-sizing: border-box;
+	padding-bottom: var(--wp--preset--spacing--40);
 
-	.wp-block-design-system-frame {
-
-		.scroll-smoothing & {
-			overflow: visible;
-		}
-
-	}
 
 	&__track {
 		position: relative;
@@ -150,8 +144,8 @@ html {
 	}
 
 	justify-content: flex-start;
-	top: 100%;
-	bottom: auto;
+	top: auto;
+	bottom: 0;
 	right: 0;
 	left: 0;
 	display: flex;

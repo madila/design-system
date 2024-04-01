@@ -74,7 +74,6 @@ const { state, callbacks, actions } = store( 'design-system-frame', {
 		},
 		drag: ( e ) => {
 			e.preventDefault();
-			console.log(e.type, 'drag');
 
 			const context = getContext();
 			if ( ! context.locked ) {
@@ -101,13 +100,11 @@ const { state, callbacks, actions } = store( 'design-system-frame', {
 		},
 		move: ( e ) => {
 			e.preventDefault();
-			console.log(e.type);
+
 			const context = getContext();
 			const { ref } = getElement();
 
-			console.log(context.current);
 			if (!context.locked) {
-				console.log('not locked');
 				actions._setFrame( e );
 				return;
 			}
@@ -168,7 +165,7 @@ const { state, callbacks, actions } = store( 'design-system-frame', {
 		},
 		keydown: ( e ) => {
 			const { keyCode } = e;
-			console.log(e.type);
+
 			const context = getContext();
 			let nextFrame = context.current,
 				foundIndex,
@@ -216,8 +213,6 @@ const { state, callbacks, actions } = store( 'design-system-frame', {
 			const { ref } = getElement();
 			const context = getContext();
 
-			console.log(e, context);
-
 			context.N = ref.children.length;
 			context.ready = true;
 
@@ -237,7 +232,6 @@ const { state, callbacks, actions } = store( 'design-system-frame', {
 		},
 		resize: (e) => {
 
-			console.log(e);
 			const { ref } = getElement();
 
 			const frame = ref.closest('.wp-block-design-system-frame');
