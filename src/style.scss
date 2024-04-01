@@ -112,6 +112,10 @@ html {
 .wp-block-design-system-frame {
 	position: relative;
 
+	> .wp-block-design-system-frame {
+		padding-bottom: var(--wp--preset--spacing--20);
+	}
+
 	&:has(.is-style-rounded) [aria-roledescription="slide"] {
 		//border-radius: var(--wp--preset--spacing--20);
 	}
@@ -146,9 +150,10 @@ html {
 	}
 
 	justify-content: flex-start;
+	top: 100%;
+	bottom: auto;
 	right: 0;
 	left: 0;
-	top: calc(100% - var(--wp--preset--spacing--40));
 	display: flex;
 	gap: var(--wp--preset--spacing--10);
 	margin: 0;
