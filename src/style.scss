@@ -120,14 +120,6 @@ html {
 	}
 }
 
-.wp-block-design-system-frame > .wp-block-design-system-frame__inner-container:has(.wp-block-group:nth-child(2)) {
-	overflow-x: visible;
-	scroll-margin-top: 10rem;
-	counter-reset: item;
-	scroll-behavior: smooth;
-	scroll-snap-type: x mandatory;
-}
-
 .wp-block-cover:has(.wp-block-design-system-frame) {
 	scroll-snap-align: center;
 	scroll-margin-top: 10rem;

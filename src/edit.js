@@ -148,7 +148,7 @@ export default function Edit( {
 	const blockProps = useBlockProps( {
 		style: {
 			'--inner-group-max-width': MaxWidth,
-			'--child-count': blockCount.toNumber,
+			'--child-count': blockCount,
 		},
 	} );
 
@@ -193,9 +193,7 @@ export default function Edit( {
 			<TagName { ...innerBlocksProps }>
 				<div className="wp-block-design-system-frame__inner-container">
 					<div className="wp-block-design-system-frame__track">
-						<div className="wp-block-design-system-frame__inner-container">
-							{ children }
-						</div>
+						{ children }
 					</div>
 				</div>
 			</TagName>

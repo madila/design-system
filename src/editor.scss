@@ -6,8 +6,19 @@
 
 .wp-block-design-system-frame {
 
+	&__track {
+		width: calc(100%* var(--child-count));
+		max-width: none;
+		display: grid;
+		grid-template-columns: repeat(var(--child-count), 1fr [col-start]);
+		> .wp-block {
+			width: 100%;
+		}
+	}
+
 	&__inner-container {
 
+		overflow-x: scroll;
 		padding-bottom: 0 !important;
 
 		> .wp-block {
