@@ -13,7 +13,10 @@ const { state, callbacks, actions } = store( 'design-system-frame', {
 		rID: null,
 		n: null,
 		clientX: 0,
-		timer: null
+		timer: null,
+		output: null,
+		endpointer: false,
+		y: 0
 	},
 	actions: {
 		_setFrame: () => {
@@ -75,10 +78,22 @@ const { state, callbacks, actions } = store( 'design-system-frame', {
 		drag: ( e ) => {
 			e.preventDefault();
 
+			const unifiedY = actions.unify( e ).clientY;
+
+			const yThreshold = state.y - unifiedY;
+			const isHorizontal = yThreshold > -3 && yThreshold < 3;
+
 			const context = getContext();
-			if ( ! context.locked ) {
+
+			if ( ! context.locked || !isHorizontal ) {
+				state.y = unifiedY;
+				state.endpointer = false;
+				//state.locked = false;
 				return;
 			}
+
+			state.y = unifiedY;
+			state.endpointer = true;
 
 			const { ref } = getElement();
 
@@ -105,7 +120,6 @@ const { state, callbacks, actions } = store( 'design-system-frame', {
 			const { ref } = getElement();
 
 			if (!context.locked) {
-				actions._setFrame( e );
 				return;
 			}
 
@@ -138,8 +152,9 @@ const { state, callbacks, actions } = store( 'design-system-frame', {
 			state.n = 2 + Math.round(f);
 			context.x0 = null;
 
-			if(!threshold) {
+			if(!threshold && state.endpointer) {
 				actions._setFrame( e );
+				state.endpointer = false;
 				return;
 			}
 
@@ -161,6 +176,7 @@ const { state, callbacks, actions } = store( 'design-system-frame', {
 			context.current = nextFrame;
 
 			actions._setFrame( e );
+			state.endpointer = false;
 
 		},
 		keydown: ( e ) => {
@@ -187,6 +203,7 @@ const { state, callbacks, actions } = store( 'design-system-frame', {
 				default:
 					break;
 			}
+
 
 			context.current = nextFrame;
 			context.fin = context.current;
@@ -216,6 +233,8 @@ const { state, callbacks, actions } = store( 'design-system-frame', {
 			context.N = ref.children.length;
 			context.ready = true;
 
+			state.output = document.querySelector('#output');
+
 			ref.parentElement.style.setProperty( '--n', `${ context.N }` );
 
 			const { children } = ref;
@@ -242,6 +261,7 @@ const { state, callbacks, actions } = store( 'design-system-frame', {
 				width -=
 				parseFloat(frameStyles.paddingLeft) +
 				parseFloat(frameStyles.paddingRight);
+
 			frame.style.setProperty( '--inner-group-max-width', `${ width }px` );
 
 			const { innerWidth } = window;

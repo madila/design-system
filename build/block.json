@@ -111,6 +111,9 @@
     "allowedBlocks": {
       "type": "array"
     },
+    "accentColor": {
+      "type": "string"
+    },
     "navigation": {
       "type": "array",
       "source": "query",

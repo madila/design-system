@@ -7,7 +7,7 @@
 .wp-block-design-system-frame {
 
 	&__track {
-		width: calc(100%* var(--child-count));
+		width: calc(var(--inner-group-max-width) * var(--child-count));
 		max-width: none;
 		display: grid;
 		grid-template-columns: repeat(var(--child-count), 1fr [col-start]);

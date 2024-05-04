@@ -12,20 +12,23 @@ import { useInnerBlocksProps, useBlockProps } from '@wordpress/block-editor';
  * editor into `post_content`.
  *
  * @param {WPElement} element
- * @param {string}    element.clientId
  * @param {Object}    element.attributes
+ * @param {string}    element.attributes.anchor
  * @param {string}    element.attributes.tagName
  * @param {string}    element.attributes.maxWidth
  * @param {Array}     element.attributes.navigation
- * @param {Array}     element.attributes.navCount
+ * @param {Array}     element.attributes.blockCount
+ * @param {Array}     element.attributes.accentColor
  * @see https://developer.wordpress.org/block-editor/reference-guides/block-api/block-edit-save/#save
  *
  * @return { WPElement } Element to render.
  */
-export default function save( { attributes: { blockId: BlockName, tagName: TagName, maxWidth: MaxWidth, blockCount: NavCount, navigation: Navigation } } ) {
+export default function save( { attributes: { anchor: Anchor, tagName: TagName, maxWidth: MaxWidth, blockCount: NavCount, navigation: Navigation, accentColor: AccentColor } } ) {
+
 	const blockProps = useBlockProps.save( {
 		style: {
 			'--inner-group-max-width': MaxWidth,
+			'--accent-color': AccentColor,
 		}
 	} );
 
@@ -34,8 +37,8 @@ export default function save( { attributes: { blockId: BlockName, tagName: TagNa
 	Navigation && Navigation.map( ( dot, index ) => {
 		const intIndex = parseInt( index );
 		dots.push( {
-			id: `${ BlockName }-tab-${ intIndex }`,
-			href: `#${ BlockName }-${ intIndex }`,
+			id: `${ Anchor }-tab-${ intIndex }`,
+			href: `#${ Anchor }-${ intIndex }`,
 			index: intIndex,
 			disabled: null
 		});
@@ -51,7 +54,7 @@ export default function save( { attributes: { blockId: BlockName, tagName: TagNa
 		data-wp-context={ `{"ready": false, "timer": null, "drag": false, "locked": false, "tension": 0, "x0": null, "N": ${ NavCount }, "ini": null, "fin": 0, "anf": null, "current": 0, "list": ${ JSON.stringify( dots ) }}` }>
 		<div className="wp-block-design-system-frame__track">
 			<div className="wp-block-design-system-frame__inner-container"
-				role="group" id={BlockName}
+				role="group"
 				aria-roledescription="carousel"
 				data-wp-class--ready="context.ready"
 				data-wp-init--start="actions.start"

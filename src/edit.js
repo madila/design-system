@@ -15,6 +15,9 @@ import {
 	useInnerBlocksProps,
 	useBlockProps,
 	InspectorControls,
+	PanelColorSettings,
+	withColors,
+	PanelBody
 } from '@wordpress/block-editor';
 
 import { SelectControl, __experimentalUnitControl as UnitControl } from '@wordpress/components';
@@ -107,6 +110,33 @@ function InnerGroupsControl( { maxWidth, onMaxWidthChange } ) {
 	);
 }
 
+
+/**
+ * Render inspector controls for the Group block.
+ *
+ * @param {Object}   props                  Component props.
+ * @param {string}   props.accentColor         The HTML tag name.
+ * @param {Function} props.setAccentColor onChange function for the SelectControl.
+ *
+ * @return {JSX.Element}                The control group.
+ */
+function ColorGroupControl( { accentColor, setAccentColor } ) {
+	return (
+		<InspectorControls key="setting">
+			<PanelColorSettings
+				title={__('Accent color')}
+				colorSettings={[
+					{
+						value: accentColor,
+						onChange: setAccentColor,
+						label: __('Accent color')
+					},
+				]}
+			/>
+		</InspectorControls>
+	);
+}
+
 /**
  * The edit function describes the structure of your block in the context of the
  * editor. This represents what the editor will render when the block is used.
@@ -131,16 +161,16 @@ export default function Edit( {
 	} ) );
 
 	const {
+		anchor: Anchor = null,
 		tagName: TagName = 'div',
 		maxWidth: MaxWidth = '100%',
-		blockId: BlockName = clientId,
+		blockId: BlockName = null,
+		accentColor: AccentColor,
 		navigation: Navigation = []
 	} = attributes;
 
 	useEffect( () => {
-		if ( ! BlockName ) {
-			setAttributes( { blockId: clientId } );
-		}
+		if(!Anchor) setAttributes( { anchor: clientId } );
 	}, [] );
 
 	const previousBlockCount = useRef( blockCount );
@@ -190,6 +220,10 @@ export default function Edit( {
 					setAttributes( { maxWidth: value } );
 				} }
 			/>
+			<ColorGroupControl accentColor={ AccentColor }
+							   setAccentColor={ ( value ) => {
+								   setAttributes( { accentColor: value } );
+							   } } />
 			<TagName { ...innerBlocksProps }>
 				<div className="wp-block-design-system-frame__inner-container">
 					<div className="wp-block-design-system-frame__track">
