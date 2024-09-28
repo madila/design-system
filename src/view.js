@@ -40,7 +40,6 @@ const { state, callbacks, actions } = store( 'design-system-frame', {
 			return state.clientX;
 		},
 		lock: ( e ) => {
-			e.preventDefault();
 
 			const { ref } = getElement();
 			const context = getContext();
@@ -76,19 +75,18 @@ const { state, callbacks, actions } = store( 'design-system-frame', {
 
 		},
 		drag: ( e ) => {
-			e.preventDefault();
 
 			const unifiedY = actions.unify( e ).clientY;
 
 			const yThreshold = state.y - unifiedY;
+			state.y = unifiedY;
 			const isHorizontal = yThreshold > -3 && yThreshold < 3;
 
 			const context = getContext();
 
 			if ( ! context.locked || !isHorizontal ) {
-				state.y = unifiedY;
 				state.endpointer = false;
-				//state.locked = false;
+				state.locked = false;
 				return;
 			}
 
@@ -114,7 +112,6 @@ const { state, callbacks, actions } = store( 'design-system-frame', {
 
 		},
 		move: ( e ) => {
-			e.preventDefault();
 
 			const context = getContext();
 			const { ref } = getElement();

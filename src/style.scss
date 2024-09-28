@@ -24,7 +24,7 @@ html {
 	--i: 0;
 	--n: 0;
 	position: relative;
-	width: 100%;
+	margin: 0 auto;
 	box-sizing: border-box;
 	padding-bottom: var(--wp--preset--spacing--40);
 
@@ -36,7 +36,6 @@ html {
 		backface-visibility: hidden;
 		box-sizing: border-box;
 		overflow: visible;
-
 	}
 
 	&__inner-container {
@@ -50,11 +49,16 @@ html {
 			}
 
 			&.ready {
-				touch-action: pan-x;
+				--per-view: 1fr;
+				//touch-action: pan-x;
 				border: 0;
 				width: calc(var(--inner-group-max-width) * var(--n));
-				gap: 0 !important;
-				display: flex;
+
+				display: grid;
+				grid-template-columns: repeat(var(--n), var(--per-view));
+				min-width: var(--slider-width);
+				gap: inherit;
+
 				flex-wrap: nowrap;
 				height: auto;
 				transition: transform 300ms var(--animation-timing-function);
@@ -142,14 +146,14 @@ html {
 
 	justify-content: flex-start;
 	top: auto;
-	bottom: 0;
+	bottom: var(--wp--preset--spacing--20);
 	right: 0;
 	left: 0;
 	display: flex;
-	gap: var(--wp--preset--spacing--10);
+	gap: var(--wp--preset--spacing--40);
 	margin: 0;
-	padding-top: var(--wp--preset--spacing--10);
-	padding-bottom: var(--wp--preset--spacing--10);
+	padding-top: var(--wp--preset--spacing--20);
+	padding-bottom: var(--wp--preset--spacing--20);
 	position: absolute;
 
 	li {
@@ -171,8 +175,9 @@ html {
 	text-indent: -30px;
 	transition: all .2s linear;
 	max-width: 20%;
-	min-width: 3rem;
+	min-width: 1em;
 	height: var(--wp--preset--spacing--5);
+	aspect-ratio: 1/1;
 
 	&:not([aria-disabled]) {
 		cursor: pointer;

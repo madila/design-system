@@ -190,6 +190,7 @@ export default function Edit( {
 		}
 	);
 
+
 	useEffect( () => {
 		if ( previousBlockCount.current > 0 && blockCount === 0 ) {
 			removeBlock( clientId );
@@ -224,6 +225,7 @@ export default function Edit( {
 							   setAccentColor={ ( value ) => {
 								   setAttributes( { accentColor: value } );
 							   } } />
+
 			<TagName { ...innerBlocksProps }>
 				<div className="wp-block-design-system-frame__inner-container">
 					<div className="wp-block-design-system-frame__track">
